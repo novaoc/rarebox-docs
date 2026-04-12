@@ -10,7 +10,7 @@ export default defineConfig({
   description: 'Documentation for Rarebox — the privacy-first Pokémon TCG portfolio tracker',
   
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { property: 'og:title', content: 'Rarebox Docs' }],
     ['meta', { property: 'og:description', content: 'Developer and user documentation for Rarebox' }],
     ['meta', { property: 'og:type', content: 'website' }],
