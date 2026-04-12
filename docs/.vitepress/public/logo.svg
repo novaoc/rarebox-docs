@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" fill="none" stroke="#f5a623" stroke-width="3"/>
+  <polygon points="32,12 48,22 48,42 32,52 16,42 16,22" fill="#f5a623" opacity="0.15"/>
+  <text x="32" y="38" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#f5a623">R</text>
+</svg>
