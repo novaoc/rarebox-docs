@@ -16,9 +16,11 @@ rarebox/
 ├── src/
 │   ├── assets/             # CSS, images, static resources
 │   ├── components/         # Vue components
-│   ├── composables/        # Vue composables (shared reactive logic)
+│   ├── data/               # Static data files
 │   ├── router/             # Vue Router configuration
+│   ├── services/           # API integration modules
 │   ├── stores/             # Pinia stores (state management)
+│   ├── utils/              # Utility functions
 │   ├── views/              # Page-level Vue components (routed)
 │   ├── App.vue             # Root component
 │   ├── db.js               # Dexie.js persistence layer
@@ -36,39 +38,71 @@ rarebox/
 
 The heart of the application. Pinia stores manage all state:
 
-- **`portfolio.js`** — The main store. Manages portfolios, items, snapshots, price alerts, settings. Handles persistence to IndexedDB via `db.js`. Contains the async `init()` method that hydrates state on app load and the debounced `persist()` / immediate `persistNow()` methods for writing back.
-
-<!-- TODO: Nova — list other stores here (deck store, etc.) with one-line descriptions -->
+- **`portfolio.js`** — The main store. Manages portfolios, items, snapshots, price alerts, settings. Handles persistence to IndexedDB via `db.js`. Contains the async `init()` method that hydrates state on load and the debounced `persist()` / immediate `persistNow()` methods for writing back.
+- **`decks.js`** — Deck CRUD, card operations (`addCardToDeck`, `updateCardQuantity`, `removeCardFromDeck`), stats computation (`getDeckStats` cross-references against portfolio store), and meta deck import (`importMetaDeck`). Stored in localStorage (`rarebox_decks`), not IDB.
 
 ### `src/db.js`
 
-The persistence layer. Wraps Dexie.js with three exports:
+The persistence layer. Wraps Dexie.js with these exports:
 
 - **`loadState()`** — reads the entire app state from IndexedDB
 - **`saveState(value)`** — writes the entire state blob to IndexedDB
 - **`isStale(item)`** — checks if an item's price is past its staleness threshold (24h for cards, 12h for sealed/graded)
 - **`hasNeverPriced(item)`** — returns true if an item has never had a successful price fetch
 
-Uses a single-table, single-row design — one key (`portfolio_state`) stores the entire JSON state. This is intentionally simple; the state blob is small enough that full serialization on every write is negligible.
+Uses a single-table, single-row design — one key (`app_state`) stores the entire JSON state. This is intentionally simple; the state blob is small enough that full serialization on every write is negligible.
+
+### `src/services/`
+
+API integration modules. Each service encapsulates one external API:
+
+- **`pokemonApi.js`** — pokemontcg.io wrapper. `searchCards()`, `getCard()`, `getSets()`, `getSetCards()`, `getMarketPrice()`. Uses `select=` parameter to trim payloads. In-memory cache with 1h TTL.
+- **`priceCharting.js`** — PriceCharting JSON API. Browser-direct fetch with CORS. `searchPC()` for sealed/graded product search. 1h TTL cache, max 200 entries.
+- **`priceHistory.js`** — tcgdex price-history GitHub repo. Fetches historical TCGPlayer data (Nov 2022+). 404s cached as misses.
+- **`metaDecksApi.js`** — Serverless endpoint (`/api/search`) wrapper. Fetches live meta decks from Limitless TCG.
+- **`priceServer.js`** — Legacy price server client (deprecated, kept for local dev).
+
+### `src/utils/`
+
+- **`alerts.js`** — Price alert CRUD, browser notification integration, `checkAlerts()` against a price map.
+- **`backup.js`** — JSON export/import of all Rarebox data. `exportBackup()` dumps portfolios, settings, snapshots, and price caches. `importBackup()` atomically replaces all data and reloads.
+- **`excel.js`** — XLSX export of portfolio data (summary + items sheets).
+
+### `src/data/`
+
+- **`metaDecks.js`** — Static meta deck data with hardcoded card IDs and images for instant resolution.
 
 ### `src/components/`
 
-Vue single-file components. Key patterns:
+Vue single-file components:
 
-- **Bottom sheet pattern** — on mobile, detail panels and modals slide up from the bottom with drag handles and rounded corners. Triggered by `@media (hover: none)`.
-- **Card grid** — responsive grid with overlay buttons (Add/Details) always visible on touch devices.
-
-<!-- TODO: Nova — list the major components here with descriptions -->
+- **`AddItemModal.vue`** — Add cards, sealed products, or graded slabs. Three-step flow: type → search → configure.
+- **`BulkImportModal.vue`** — Paste PTCGL/PTCGO deck lists for bulk card import.
+- **`InstallPrompt.vue`** — PWA install prompt with platform detection.
+- **`LocalSyncModal.vue`** — Optional cross-device sync via jsonbin.io.
+- **`PortfolioChart.vue`** — Portfolio value-over-time chart (ApexCharts). LOCF algorithm.
+- **`PriceChart.vue`** — Individual card price history chart (ApexCharts).
+- **`TourModal.vue`** — Feature tour video modal.
 
 ### `src/views/`
 
 Page-level components mapped to routes:
 
-<!-- TODO: Nova — list views with their route paths -->
+| View | Route | Description |
+|------|-------|-------------|
+| `DashboardView.vue` | `/` | Combined portfolio overview, total value, gain/loss |
+| `SearchView.vue` | `/search` | Card search across all sets |
+| `SetsView.vue` | `/sets` | Browse TCG sets (EN/JP), click to browse cards |
+| `PortfolioView.vue` | `/portfolio/:id` | Single portfolio detail with chart and item table |
+| `DeckListView.vue` | `/decks` | Grid of all decks with stats |
+| `MetaDecksView.vue` | `/decks/meta` | Live meta decks from Limitless TCG |
+| `DeckBuilderView.vue` | `/decks/:id` | Deck editor with card search and ownership tracking |
+| `SettingsView.vue` | `/settings` | Export, backup, alerts, reset |
+| `TermsView.vue` | `/terms` | Terms & Conditions + Privacy Policy |
 
 ### `api/`
 
-Python serverless functions deployed as Vercel Functions. Each file is an independent endpoint:
+Python serverless functions deployed as Vercel Functions:
 
 | File | Endpoint | Purpose |
 |------|----------|---------|

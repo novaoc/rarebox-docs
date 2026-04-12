@@ -2,19 +2,15 @@
 
 This page documents the shape of data structures stored in Rarebox's IndexedDB state. Use this as a reference when working with the Pinia store or writing import/export logic.
 
-::: info
-The schemas below are documented from the README and architecture discussions. Nova should verify these match the actual implementation and fill in any missing fields.
-:::
-
 ## Portfolio
 
 ```js
 {
-  id: "uuid-string",           // Unique identifier
-  name: "My Collection",       // User-defined name
-  color: "#4f46e5",           // Hex color for charts
-  items: [PortfolioItem],     // Array of items in this portfolio
-  createdAt: 1719849600000    // Timestamp
+  id: "uuid-string",              // crypto.randomUUID()
+  name: "My Collection",         // User-defined name
+  color: "#f5a623",              // Hex color for sidebar dot and charts
+  createdAt: "2026-04-08T...",   // ISO string
+  items: [PortfolioItem]         // Array of items in this portfolio
 }
 ```
 
@@ -22,50 +18,70 @@ The schemas below are documented from the README and architecture discussions. N
 
 ```js
 {
-  id: "uuid-string",           // Unique identifier
-  type: "card",                // "card" | "sealed" | "graded"
-  name: "Charizard ex",       // Display name
-  set: "Obsidian Flames",     // Set name
-  setCode: "sv3",             // Set code identifier
-  cardNumber: "125",          // Card number within set
-  imageUrl: "https://...",     // Card/product image URL
-  quantity: 1,                // How many owned
-  costBasis: 25.00,           // What the user paid (per unit)
-  currentMarketPrice: 45.99,  // Latest fetched market price
-  lastRefreshed: 1719849600000, // Timestamp of last successful price fetch
+  id: "uuid-string",              // crypto.randomUUID()
+  type: "card",                   // "card" | "sealed" | "graded"
+  name: "Charizard ex",          // Display name
+  setName: "Obsidian Flames",    // Set name (human readable)
+  setCode: "sv3",                // pokemontcg.io set ID
+  cardId: "sv3-125",             // pokemontcg.io card ID (cards only)
+  number: "125",                 // Card number within set
+  imageUrl: "https://...",       // Card/product image URL
+  quantity: 1,                   // How many owned
+  purchasePrice: 25.00,          // What the user paid per unit
+  purchaseDate: "2026-01-15",    // ISO date string (optional)
+  currentMarketPrice: 45.99,     // Latest fetched market price (cards)
+  currentValue: 45.99,           // Latest value (sealed/graded)
+  lastPriceUpdate: "2026-04-08T...", // ISO string of last successful price fetch
+  addedAt: "2026-04-08T...",     // ISO string when added to portfolio
+
+  // Card-specific fields:
+  cardData: { /* full pokemontcg.io card object */ },
+  _lang: "en",                   // "en" | "ja" — used to detect JP cards for tcgdex routing
 
   // Graded items only:
-  gradingCompany: "PSA",      // "PSA" | "BGS" | "CGC" | "ACE"
-  grade: 10,                  // Numeric grade
+  gradingCompany: "PSA",         // "PSA" | "BGS" | "CGC" | "ACE"
+  grade: 10,                     // Numeric grade (e.g., 10, 9.5, 8)
 
   // Sealed items only:
-  productType: "booster-box", // Product category identifier
+  // (no special fields beyond type === "sealed")
 }
 ```
 
-## Snapshot Entry
+## Snapshot
+
+Snapshots are keyed by portfolio ID. Each portfolio has an array of daily snapshots:
 
 ```js
-// Keyed by item ID, then by date string
 {
-  "item-uuid": {
-    "2025-06-01": { price: 45.99 },
-    "2025-06-02": { price: 46.50 },
-    // ... up to 1095 entries (3 years)
-  }
+  [portfolioId]: [
+    {
+      date: "2026-04-08",       // YYYY-MM-DD string
+      ts: 1744080000000,         // Timestamp (ms)
+      values: {
+        [itemId]: 45.99,         // Price at snapshot time
+        [itemId]: 12.50,
+        // ...
+      }
+    },
+    // ... up to 1095 entries (3 years max)
+  ]
 }
 ```
 
-<!-- TODO: Nova — confirm the exact snapshot entry shape -->
+Snapshots are trimmed to `MAX_SNAPSHOTS = 1095` per portfolio. Oldest entries are dropped first.
+
+The `recordSnapshot(portfolioId)` function records today's prices for all items. `autoSnapshot()` checks each portfolio and records if today hasn't been captured yet.
 
 ## Deck
 
+Decks are stored separately from portfolios in localStorage (`rarebox_decks`), not in the IDB state blob:
+
 ```js
 {
-  id: "uuid-string",
-  name: "Charizard ex Deck",
-  cards: [DeckCard],
-  createdAt: 1719849600000
+  id: "uuid-string",              // crypto.randomUUID()
+  name: "Charizard ex Deck",     // User-defined name
+  cards: [DeckCard],             // Array of cards in the deck
+  createdAt: "2026-04-08T..."    // ISO string
 }
 ```
 
@@ -73,53 +89,68 @@ The schemas below are documented from the README and architecture discussions. N
 
 ```js
 {
-  id: "card-id",               // pokemontcg.io card ID
-  name: "Charizard ex",
-  set: "Obsidian Flames",
-  imageUrl: "https://...",
-  quantity: 2,                 // How many needed in the deck
-  marketPrice: 45.99,          // Current market price
-  owned: false,                // Whether the user owns this card (cross-ref'd against portfolios)
+  cardId: "sv3-125",             // pokemontcg.io card ID
+  name: "Charizard ex",          // Card name
+  setName: "Obsidian Flames",    // Set name
+  setCode: "sv3",                // Set ID
+  number: "125",                 // Card number
+  quantity: 2,                   // How many in the deck
+  price: 45.99,                  // Market price (null if unresolved)
+  image: "https://..."           // Card image URL (small)
 }
 ```
+
+Deck stats are computed on the fly by `getDeckStats(deckId)`, which cross-references against the portfolio store to build an `ownedMap` of `cardId → totalQty`.
 
 ## Price Alert
 
+Price alerts are stored in localStorage (`rarebox_alerts`), not in the IDB state blob:
+
 ```js
 {
-  itemId: "uuid-string",       // References a portfolio item
-  threshold: 50.00,            // Price threshold
-  direction: "above",          // "above" | "below"
-  triggered: false,            // Whether the alert has fired
-  createdAt: 1719849600000
+  id: "uuid-string",             // crypto.randomUUID()
+  cardId: "sv3-125",             // pokemontcg.io card ID
+  cardName: "Charizard ex",      // Display name
+  condition: "above",            // "above" | "below"
+  threshold: 50.00,              // Price threshold in USD
+  currentPrice: 45.99,           // Price at time of alert creation
+  triggered: false,              // Whether alert has fired
+  triggeredAt: null,             // ISO string when triggered (null until fired)
+  triggeredPrice: null,          // Price when triggered (set on trigger)
+  createdAt: "2026-04-08T..."    // ISO string
 }
 ```
 
-<!-- TODO: Nova — confirm price alert schema and add any missing fields -->
-
 ## Full State Blob
 
-The entire state persisted to IndexedDB as a single JSON object:
+The entire app state persisted to IndexedDB as a single JSON row:
 
 ```js
 {
   portfolios: [Portfolio],
-  snapshots: { [itemId]: { [dateString]: SnapshotEntry } },
+  activePortfolioId: "uuid-string",
   settings: {
-    // App-level settings
-    // TODO: Nova — document settings fields
+    currency: "USD",
+    defaultPortfolioId: null
   },
-  decks: [Deck],
-  priceAlerts: [PriceAlert],
-  // ... any other persisted state
+  snapshots: {
+    [portfolioId]: [Snapshot]
+  }
 }
 ```
 
-This is stored in IndexedDB under the key `portfolio_state` in the `state` table of the `Rarebox` Dexie database.
+This is stored in IndexedDB under the key `app_state` in the `state` table of the `Rarebox` Dexie database. The Pinia store is the source of truth; IDB is the persistence layer.
+
+**Not in the state blob** (stored separately in localStorage):
+- `rarebox_decks` — deck store (uses localStorage, not IDB)
+- `rarebox_alerts` — price alerts (uses localStorage, not IDB)
+- `ph_cache_*` — PriceCharting response cache (1h TTL)
+- `rarebox_meta_decks_cache` — Limitless meta deck data (24h TTL)
+- `rarebox_sets_*` — EN/JP set listings (24h TTL)
 
 ## Staleness Thresholds
 
-Used by `isStale(item)` in `db.js`:
+Used by `isStale(item)` in `src/db.js`:
 
 | Item Type | Threshold (ms) | Human Readable |
 |-----------|---------------|----------------|
@@ -127,4 +158,11 @@ Used by `isStale(item)` in `db.js`:
 | `sealed` | 43,200,000 | 12 hours |
 | `graded` | 43,200,000 | 12 hours |
 
-Items with no `lastRefreshed` timestamp and no `currentMarketPrice` are classified as "never priced" (`hasNeverPriced()`), which is a distinct state from "stale."
+Items with no `lastPriceUpdate` timestamp and no `currentMarketPrice` / `currentValue` are classified as "never priced" (`hasNeverPriced()`), which is a distinct state from "stale."
+
+## Persistence Details
+
+- **Debounce:** 3 seconds between mutation and IDB write
+- **Beforeunload flush:** Immediate `saveState()` on tab close
+- **Deep clone:** State is `JSON.parse(JSON.stringify(...))`'d before IDB write to strip Vue reactive proxies
+- **Migration:** On first load after upgrade, localStorage data is read and written to IDB, then legacy keys are cleared

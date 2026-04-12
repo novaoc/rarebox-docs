@@ -82,15 +82,18 @@ Always use `<style scoped>` unless you have a specific reason for global styles.
 - Touch detection: `@media (hover: none)` for touch-specific behaviors
 - Breakpoints used in the project:
 
-<!-- TODO: Nova — document the actual breakpoint values used -->
-
 ```css
-/* Tablet */
-@media (min-width: 768px) { }
+/* Mobile → Tablet */
+@media (max-width: 768px) { }
 
-/* Desktop */
-@media (min-width: 1024px) { }
+/* Touch devices (persistent overlays, bottom sheets) */
+@media (hover: none) { }
+
+/* iOS PWA safe areas */
+@supports (padding-top: env(safe-area-inset-top)) { }
 ```
+
+The primary breakpoint is `768px` — everything below is mobile, everything above is desktop. There's no explicit tablet breakpoint; the app uses a two-tier responsive system. Touch detection via `(hover: none)` is used alongside the width breakpoint for mobile-specific behaviors like bottom sheets and persistent overlay buttons.
 
 ### Color and Theme
 
