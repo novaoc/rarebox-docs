@@ -88,11 +88,6 @@ export default defineConfig({
       provider: 'local',
     },
 
-    editLink: {
-      pattern: 'https://github.com/novaoc/rarebox-docs/edit/main/docs/:path',
-      text: 'Edit this page on GitHub',
-    },
-
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Built by <a href="https://www.threads.com/@novaoc_18584" target="_blank">Nova</a>',
