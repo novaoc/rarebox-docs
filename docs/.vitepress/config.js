@@ -1,3 +1,8 @@
+/**
+ * Rarebox Documentation
+ * Built by Nova — GitHub: @novaoc
+ * https://docs.rarebox.io
+ */
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
