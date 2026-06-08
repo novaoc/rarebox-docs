@@ -7,7 +7,7 @@ Rarebox tracks three types of collectibles: raw cards, sealed products, and grad
 Sealed products include booster boxes, Elite Trainer Boxes (ETBs), tins, blister packs, and other factory-sealed items. Prices are fetched from **PriceCharting** directly in the browser — no backend proxy needed.
 
 ### Supported Products
-Any Pokémon TCG sealed product listed on PriceCharting. Search by product name and Rarebox matches against PriceCharting's catalog.
+Any sealed product listed on PriceCharting — Pokémon, Magic, Lorcana, One Piece, or Riftbound. Search by product name and Rarebox matches against PriceCharting's catalog.
 
 ### Pricing
 PriceCharting provides current market values based on recent sales data. Prices are fetched via their JSON API. Sealed product prices can be volatile around new releases and YouTube opening content, so the staleness threshold is set to **12 hours** (vs. 24 hours for raw cards).

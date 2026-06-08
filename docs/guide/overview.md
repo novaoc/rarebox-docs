@@ -1,6 +1,6 @@
 # Overview
 
-Rarebox is a privacy-first Pokémon TCG portfolio tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) with live market prices and portfolio value charts.
+Rarebox is a privacy-first multi-TCG portfolio tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) across Pokémon, Magic: The Gathering, Disney Lorcana, One Piece, and Riftbound — with live market prices and portfolio value charts.
 
 **Live at [rarebox.io](https://rarebox.io)** · **Source on [GitHub](https://github.com/novaoc/rarebox)**
 
@@ -22,7 +22,7 @@ Create multiple named portfolios, each with a color and their own value chart. A
 Create decks, cross-reference against your collection to see which cards you already own, calculate cost to complete, and import current meta decks from Limitless TCG with one click.
 
 ### Browse & Search
-Browse every English and Japanese TCG set with logos, series, release dates, and card counts. Search cards by name across all sets with live results. Japanese cards show images from tcgdex CDN with CardMarket EUR→USD converted prices.
+Browse every English and Japanese TCG set with logos, series, release dates, and card counts. Multi-TCG search across Pokémon, Magic, Lorcana, One Piece, and Riftbound with TCG filter pills. Search cards by name across all sets with live results. Japanese cards show images from tcgdex CDN with CardMarket EUR→USD converted prices. Riftbound cards show images from Riot Games CDN.
 
 ### Price Charts
 Card price history going back to November 2022. Portfolio value-over-time charts using a last-observation-carried-forward (LOCF) system. Daily price snapshots for sealed and graded items with 3 years of history retention.
@@ -49,7 +49,11 @@ Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR
 |-----|---------|
 | [pokemontcg.io](https://pokemontcg.io) | Card data + live TCGPlayer market prices |
 | [tcgdex](https://tcgdex.dev) | Japanese sets/cards, price history (Nov 2022+) |
-| [PriceCharting](https://www.pricecharting.com) | Sealed product + graded slab prices |
+| [Scryfall](https://scryfall.com) | Magic: The Gathering sets/cards/prices |
+| [Lorcast](https://lorcast.com) | Disney Lorcana sets/cards/prices |
+| [optcgapi](https://optcgapi.com) | One Piece sets/cards/market prices |
+| [riftcodex.com](https://riftcodex.com) | Riftbound sets/cards/images (no prices) |
+| [PriceCharting](https://www.pricecharting.com) | Sealed + graded prices, non-Pokémon card prices |
 | [Limitless TCG](https://limitlesstcg.com) | Tournament meta deck data |
 | [Pokellector](https://pokellector.com) | Japanese set logos |
 

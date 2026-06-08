@@ -40,9 +40,72 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 - Price history data availability starts November 2022
 - Set data is cached in localStorage for 24 hours
 
+## Scryfall
+
+**Purpose:** Magic: The Gathering card data, USD prices, and set symbol icons.
+
+**Called from:** Browser (client-side)
+
+**Endpoint:** `https://api.scryfall.com`
+
+**Key details:**
+- CORS `*` — no proxy needed
+- Sets filtered to paper, non-digital, physical set types
+- Card images from Scryfall CDN
+- Prices from `prices.usd` or `prices.usd_foil`
+- Results cached in memory for 1 hour
+
+## Lorcast
+
+**Purpose:** Disney Lorcana card data and USD prices.
+
+**Called from:** Browser (client-side)
+
+**Endpoint:** `https://api.lorcast.com/v0`
+
+**Key details:**
+- CORS `*` — no proxy needed
+- Set and card data with images and USD prices
+- Results cached in memory for 1 hour
+
+## optcgapi
+
+**Purpose:** One Piece Card Game sets, cards, and USD market prices.
+
+**Called from:** Browser (client-side)
+
+**Endpoint:** `https://optcgapi.com/api`
+
+**Key details:**
+- All ~3300 cards fetched in one call, searched client-side
+- Set ordering hardcoded to match release order
+- Results cached in memory for 1 hour
+
+## riftcodex.com
+
+**Purpose:** Riftbound (League of Legends TCG) sets, cards, and card images.
+
+**Called from:** Browser (client-side)
+
+**Endpoint:** `https://api.riftcodex.com`
+
+**Key details:**
+- CORS `*` — no proxy needed
+- Open REST API, no API key required
+- 7 sets (Origins, Spiritforged, Unleashed, promo sets), 1000+ cards
+- Card images from Riot Games CDN (`cmsassets.rgpub.io`)
+- Pagination: 50 cards per page
+- **No prices** — card data only. Prices come from PriceCharting via `priceFeedService` for portfolio items
+- `tcgplayer_id` field available for price lookups if needed
+- Results cached in memory for 1 hour
+
+::: note Price Source
+riftcodex provides card metadata and images. For pricing, Rarebox uses PriceCharting's JSON search endpoint (same as sealed/graded). When a card is added to the portfolio, `priceFeedService` queries PriceCharting for the current market value.
+:::
+
 ## PriceCharting
 
-**Purpose:** Sealed product prices (booster boxes, ETBs, tins) and graded slab prices (grade-specific).
+**Purpose:** Sealed product prices (booster boxes, ETBs, tins), graded slab prices (grade-specific), and market prices for non-Pokémon TCG cards (Magic, Lorcana, One Piece, Riftbound).
 
 **Called from:** Browser (client-side, direct JSON API calls)
 
