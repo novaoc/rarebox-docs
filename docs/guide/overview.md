@@ -1,6 +1,6 @@
 # Overview
 
-Rarebox is a privacy-first multi-TCG portfolio tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) across Pokémon, Magic: The Gathering, Disney Lorcana, One Piece, and Riftbound — with live market prices and portfolio value charts.
+Rarebox is a privacy-first multi-TCG portfolio tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) across Pokémon, Magic: The Gathering, Yu-Gi-Oh!, Disney Lorcana, One Piece, and Riftbound — with live market prices and portfolio value charts.
 
 **Live at [rarebox.io](https://rarebox.io)** · **Source on [GitHub](https://github.com/novaoc/rarebox)**
 
@@ -18,17 +18,38 @@ Most TCG portfolio tools require accounts, store your data on their servers, and
 ### Portfolio Tracking
 Create multiple named portfolios, each with a color and their own value chart. Add cards by searching any set, add sealed products and graded slabs with grade-specific pricing. See total collection value, cost basis, and gain/loss across all portfolios.
 
+### Multi-TCG Support
+Six trading card games are supported out of the box:
+
+| TCG | Card Source | Price Source | Notes |
+|-----|------------|--------------|-------|
+| Pokémon | pokemontcg.io | TCGPlayer market | English + Japanese cards |
+| Magic: The Gathering | Scryfall | Scryfall USD prices | Paper cards only |
+| Yu-Gi-Oh! | YGOPRODeck | TCGPlayer + Cardmarket | All rarities |
+| Disney Lorcana | Lorcast | Lorcast USD prices | All sets |
+| One Piece | optcgapi | Market prices | All sets |
+| Riftbound | riftcodex | PriceCharting | Images from Riot CDN |
+
 ### Deck Builder
-Create decks, cross-reference against your collection to see which cards you already own, calculate cost to complete, and import current meta decks from Limitless TCG with one click.
+Create decks for any TCG, cross-reference against your collection to see which cards you already own, calculate cost to complete, and import current meta decks from Limitless TCG with one click. Meta decks are available for all 6 TCGs.
+
+### Trade Analyzer
+Compare Side A vs Side B trade proposals with fair market values. Supports grading (PSA / BGS / CGC / SGC with grades 1–10), cost basis tracking, and a fairness meter that calculates percentage difference between sides. Share trade analysis via Web Share API.
+
+### Card Scanning
+Point your camera at a physical card — Tesseract.js OCR extracts the card name, then multi-TCG search resolves it against all providers. Add the scanned card to your portfolio in seconds. Supports Pokémon, MTG, and Lorcana cards.
+
+### Price Alerts
+Set price thresholds on any card (above or below a target price). Rarebox checks alerts after price refreshes and fires browser notifications when thresholds are crossed. Alerts are stored locally and persist across sessions.
 
 ### Browse & Search
-Browse every English and Japanese TCG set with logos, series, release dates, and card counts. Multi-TCG search across Pokémon, Magic, Lorcana, One Piece, and Riftbound with TCG filter pills. Search cards by name across all sets with live results. Japanese cards show images from tcgdex CDN with CardMarket EUR→USD converted prices. Riftbound cards show images from Riot Games CDN.
+Browse every English and Japanese Pokémon set with logos, series, release dates, and card counts. Browse MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound sets via the generic TCG browse system. Multi-TCG search across all 6 games with TCG filter pills.
 
 ### Price Charts
 Card price history going back to November 2022. Portfolio value-over-time charts using a last-observation-carried-forward (LOCF) system. Daily price snapshots for sealed and graded items with 3 years of history retention.
 
 ### Backup & Transfer
-Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR code or clipboard. Your data is portable.
+Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR code or clipboard. Import from Collectr (CSV/XLSX) to migrate from other tools. Your data is portable.
 
 ## Tech Stack
 
@@ -40,6 +61,9 @@ Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR
 | Charts | ApexCharts |
 | Routing | Vue Router (HTML5 history mode) |
 | Export | SheetJS (xlsx) |
+| OCR | Tesseract.js |
+| Compression | pako (gzip) |
+| QR Codes | qrcode (base64 generation) |
 | Serverless API | Python (Vercel Functions) — httpx + BeautifulSoup |
 | Hosting | Vercel |
 
@@ -50,6 +74,7 @@ Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR
 | [pokemontcg.io](https://pokemontcg.io) | Card data + live TCGPlayer market prices |
 | [tcgdex](https://tcgdex.dev) | Japanese sets/cards, price history (Nov 2022+) |
 | [Scryfall](https://scryfall.com) | Magic: The Gathering sets/cards/prices |
+| [YGOPRODeck](https://ygoprodeck.com) | Yu-Gi-Oh! card data + prices |
 | [Lorcast](https://lorcast.com) | Disney Lorcana sets/cards/prices |
 | [optcgapi](https://optcgapi.com) | One Piece sets/cards/market prices |
 | [riftcodex.com](https://riftcodex.com) | Riftbound sets/cards/images (no prices) |

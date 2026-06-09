@@ -4,7 +4,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 
 ## pokemontcg.io
 
-**Purpose:** Card data (names, images, sets, types) and live TCGPlayer market prices.
+**Purpose:** Card data (names, images, sets, types) and live TCGPlayer market prices for Pokémon.
 
 **Called from:** Browser (client-side)
 
@@ -51,8 +51,25 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 **Key details:**
 - CORS `*` — no proxy needed
 - Sets filtered to paper, non-digital, physical set types
+- Bulk data endpoint (`/bulk-data`) used for full card database preload (~545k cards in 2 requests)
 - Card images from Scryfall CDN
 - Prices from `prices.usd` or `prices.usd_foil`
+- Results cached in memory for 1 hour
+
+## YGOPRODeck
+
+**Purpose:** Yu-Gi-Oh! card data, images, and prices.
+
+**Called from:** Browser (client-side)
+
+**Endpoint:** `https://db.ygoprodeck.com/api/v7/cardinfo.php`
+
+**Key details:**
+- CORS `*` — no proxy needed
+- Search by card name (`fname` parameter)
+- Card images from YGOPRODeck CDN
+- Prices from `card_prices[0].tcgplayer_price` or `card_prices[0].cardmarket_price`
+- Set information from `card_sets[0]`
 - Results cached in memory for 1 hour
 
 ## Lorcast
@@ -66,6 +83,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 **Key details:**
 - CORS `*` — no proxy needed
 - Set and card data with images and USD prices
+- Prices available at `c.prices?.usd` (Lorcast API format)
 - Results cached in memory for 1 hour
 
 ## optcgapi
@@ -79,6 +97,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 **Key details:**
 - All ~3300 cards fetched in one call, searched client-side
 - Set ordering hardcoded to match release order
+- API response can return `{ data: [...] }` or bare array — handler checks both
 - Results cached in memory for 1 hour
 
 ## riftcodex.com
@@ -105,14 +124,27 @@ riftcodex provides card metadata and images. For pricing, Rarebox uses PriceChar
 
 ## PriceCharting
 
-**Purpose:** Sealed product prices (booster boxes, ETBs, tins), graded slab prices (grade-specific), and market prices for non-Pokémon TCG cards (Magic, Lorcana, One Piece, Riftbound).
+**Purpose:** Sealed product prices (booster boxes, ETBs, tins), graded slab prices (grade-specific), and market prices for non-Pokémon TCG cards (Magic, Yu-Gi-Oh!, Lorcana, One Piece, Riftbound).
 
 **Called from:** Browser (client-side, direct JSON API calls)
 
+**Two integration modes:**
+
+### Free Tier (priceFeedService)
+- No API key required
+- Endpoint: `https://www.pricecharting.com/games/{game}.json`
+- Used for card price lookup in portfolios and trade analyzer
+- 6-hour IDB cache via `prices_cache` table
+- CORS-open — no backend proxy needed
+
+### Paid Tier (priceCharting.js)
+- Requires user-provided API key (stored in localStorage)
+- Used for sealed product search and detailed product lookup
+- 4-hour localStorage cache, max 500 entries
+- Falls back gracefully if no key is provided
+
 **Key details:**
-- No API key required — uses their public JSON API
 - Prices reflect recent sales data aggregated across multiple marketplaces
-- Fetched directly from the browser with no backend proxy
 - Graded prices are grade-specific (e.g., PSA 10 vs PSA 9 for the same card)
 - Staleness threshold: 12 hours (shorter than cards due to higher price volatility)
 
@@ -120,12 +152,13 @@ riftcodex provides card metadata and images. For pricing, Rarebox uses PriceChar
 
 **Purpose:** Current tournament meta deck data — top decks, meta share percentages, championship points.
 
-**Called from:** Vercel serverless function (`/api/search`)
+**Called from:** Vercel serverless function (`/api/search`) and client-side (`metaDecksApi.js`)
 
 **Key details:**
 - Data is **scraped** from Limitless TCG's website using httpx + BeautifulSoup (no official API)
 - Core cards are resolved server-side with exact card match (set code + number)
-- Server-side caching recommended — results don't change more than once per day
+- Client-side service fetches from serverless endpoint with localStorage fallback (24h cache)
+- Static fallback decks available when live endpoint is unavailable
 - If Limitless changes their HTML structure, the scraper will break and need updating
 
 ::: warning Scraping Dependency
@@ -153,3 +186,4 @@ If you're adding a new data source:
 4. Set a 15-second timeout on all fetches
 5. If the API requires server-side calls (CORS, scraping), add a new Python function in `api/`
 6. Document the staleness threshold for the new data type
+7. Add a provider entry in `src/services/tcg/providers.js` for browse/search integration

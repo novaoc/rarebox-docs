@@ -26,3 +26,7 @@ iOS doesn't support programmatic install prompts, so Rarebox shows a step-by-ste
 ## Updates
 
 PWA updates happen automatically in the background. When Rarebox deploys a new version, your installed app will pick it up on the next launch — no manual update needed.
+
+## Offline Support
+
+Rarebox caches card data in IndexedDB after the initial preload. Once cached, search and browse work offline. Price refreshes and meta deck updates require an internet connection.

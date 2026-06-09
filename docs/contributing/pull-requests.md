@@ -38,6 +38,8 @@ One PR should do one thing. A PR that adds a feature, fixes two bugs, and refact
 - [ ] Persistence works — add data, close tab, reopen, data is still there
 - [ ] If you changed store logic: verify `persist()` is called after state mutations
 - [ ] If you changed API calls: verify caching, timeout, and retry behavior
+- [ ] If you changed TCG support: verify all 6 games work (Pokemon, MTG, Yu-Gi-Oh, Lorcana, One Piece, Riftbound)
+- [ ] If you added components: verify mobile responsiveness (bottom sheets, touch targets)
 
 ### Things That Will Get Your PR Rejected
 
@@ -45,6 +47,8 @@ One PR should do one thing. A PR that adds a feature, fixes two bugs, and refact
 - **Removing privacy features** — Rarebox doesn't send user data to servers. Don't add tracking, analytics beyond what's already there, or server-side storage of collection data
 - **Uncached API calls** — every external API call must go through the caching layer
 - **Desktop-only UI** — Rarebox has a strong mobile user base. All UI changes must work on mobile
+- **Silent errors** — always log errors in catch blocks with `console.warn` or `console.error`
+- **Hardcoded game support** — use the TCG identifier field (`game`) instead of hardcoding specific TCGs
 
 ## Review Process
 
@@ -61,3 +65,4 @@ Look for issues tagged `good first issue` for approachable contributions. These 
 - Documentation additions
 - Small bug fixes with clear reproduction steps
 - New export formats
+- New TCG provider integrations (follow the pattern in `src/services/tcg/providers.js`)

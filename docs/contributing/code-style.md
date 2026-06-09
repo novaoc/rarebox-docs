@@ -37,7 +37,9 @@ const filteredItems = computed(() =>
 - **Components:** PascalCase — `CardGrid.vue`, `AddItemModal.vue`, `BottomSheet.vue`
 - **Views:** PascalCase with `View` suffix — `SearchView.vue`, `SetsView.vue`, `SettingsView.vue`
 - **Stores:** camelCase — `portfolio.js`, `deck.js`
-- **Composables:** camelCase with `use` prefix — `useCardSearch.js`, `usePriceHistory.js`
+- **Services:** camelCase — `pokemonApi.js`, `priceFeedService.js`
+- **TCG services:** camelCase in `services/tcg/` — `cardCache.js`, `multiSearch.js`, `providers.js`
+- **Utilities:** camelCase — `alerts.js`, `backup.js`, `collectrImport.js`
 
 ### Component Organization
 
@@ -63,12 +65,14 @@ Within a `.vue` file, order sections as:
 - `async`/`await` over raw Promises and `.then()` chains
 - Always wrap external API calls in try/catch
 - Use the existing retry-with-backoff pattern for API requests
+- Log meaningful error messages in catch blocks — don't silently swallow errors
 
 ### Naming
 
 - **Variables/functions:** camelCase — `fetchCardPrice`, `isStale`, `lastRefreshed`
 - **Constants:** UPPER_SNAKE_CASE for true constants — `MAX_CONCURRENT_REQUESTS`, `SNAPSHOT_RETENTION_DAYS`
 - **Boolean variables:** prefix with `is`, `has`, `should` — `isLoading`, `hasNeverPriced`, `shouldRetry`
+- **TCG identifiers:** lowercase kebab-case — `pokemon`, `mtg`, `yugioh`, `lorcana`, `one-piece`, `riftbound`
 
 ## CSS
 
@@ -125,6 +129,30 @@ resetAll() {
 ### API Calls in Stores
 
 API fetching logic lives in store actions, not in components. Components call store actions and read reactive state — they don't make API calls directly.
+
+### TCG-Specific Price Refresh
+
+When adding price refresh logic, route to the appropriate API based on the item's `game` field:
+
+```js
+async refreshPrices() {
+  for (const item of allItems) {
+    if (item.game === 'pokemon') {
+      // Use pokemontcg.io
+    } else {
+      // Use priceFeedService (PriceCharting free tier)
+    }
+  }
+}
+```
+
+## Error Handling
+
+- Always log errors in catch blocks with `console.warn` or `console.error`
+- Include context in error messages (e.g., `[Dashboard] Price refresh failed:`)
+- Don't silently swallow errors — at minimum, log them
+- For user-facing errors, show a toast or status indicator
+- For non-critical errors, log and continue (don't crash the app)
 
 ## Commit Messages
 

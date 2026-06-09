@@ -37,6 +37,15 @@ Price proxy/lookup endpoint. Fetches and transforms price data that can't be acc
 
 Fetches sealed product pricing from PriceCharting for items that need server-side access.
 
+## Client-Side Meta Decks
+
+In addition to the serverless endpoint, `metaDecksApi.js` provides:
+
+- **Live fetch** from `/api/search` with localStorage fallback (24h cache)
+- **Static fallback decks** when the live endpoint is unavailable
+- **Game-specific caching** — each TCG has its own cache key
+- **Cache invalidation** — stale fallback data is removed when server data is available
+
 ## Runtime Configuration
 
 From `vercel.json`:

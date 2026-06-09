@@ -18,6 +18,19 @@ When you view a card's detail panel, you can see its price history chart going b
 
 Ranges use exact day counts, not fractional years. The x-axis label format switches based on range — shorter ranges show individual days, longer ranges show months.
 
+### Variant Selector
+
+The price chart includes a variant selector that lets you switch between different card variants:
+
+- Normal
+- Holofoil
+- Reverse Holofoil
+- 1st Edition Holofoil
+- Unlimited
+- And other TCG-specific variants
+
+Each variant has its own price history series.
+
 ## Portfolio Value Chart
 
 The dashboard shows a portfolio value-over-time chart combining all portfolios. Each portfolio's line uses its assigned color.
@@ -67,3 +80,4 @@ The price system is designed to minimize API calls:
 - **Batched requests:** Max 3–5 concurrent API calls to avoid burst scraping patterns
 - **Retry with backoff:** 2 retries with 1s/2s delays on transient errors (429, 5xx, timeout)
 - **15s timeout:** All external fetches abort after 15 seconds
+- **Card database caching:** Preloaded card data stored in IndexedDB with in-memory index for O(1) lookup

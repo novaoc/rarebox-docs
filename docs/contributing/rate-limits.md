@@ -17,6 +17,26 @@ PriceCharting doesn't publish official rate limits for their JSON API, but aggre
 
 **During development:** Don't write loops that hit PriceCharting hundreds of times. Use the existing caching layer — if you've fetched a price once, it's cached for the session.
 
+## Scryfall
+
+No published rate limit, but be respectful. Rarebox caches results for 1 hour and uses the bulk data endpoint for preloading (2 requests for all MTG cards).
+
+## YGOPRODeck
+
+No published rate limit. Results cached in memory for 1 hour. The API supports batch queries which Rarebox uses for efficient card loading.
+
+## Lorcast
+
+No published rate limit. Results cached in memory for 1 hour.
+
+## optcgapi
+
+No published rate limit. All ~3300 cards fetched in one call, searched client-side. Results cached in memory for 1 hour.
+
+## riftcodex
+
+No published rate limit. Open REST API. Results cached in memory for 1 hour.
+
 ## tcgdex
 
 tcgdex is a community API with generous limits. No known issues during normal development.
@@ -49,6 +69,12 @@ Request
 **Max retries:** 2 (with 1s and 2s delays)
 **Max concurrent requests:** 3-5
 **Request timeout:** 15 seconds
+
+## Card Preloading
+
+The card preload system makes many API requests on first visit to build the local card database. This is expected and happens in the background. Once preloaded, search and browse use the local cache — no API calls.
+
+**During development:** You can skip preloading by clearing localStorage and not selecting any TCGs on first visit. Or let it run once and benefit from the cached data.
 
 ## Tips for Development
 

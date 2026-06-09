@@ -7,19 +7,27 @@ Rarebox tracks three types of collectibles: raw cards, sealed products, and grad
 Sealed products include booster boxes, Elite Trainer Boxes (ETBs), tins, blister packs, and other factory-sealed items. Prices are fetched from **PriceCharting** directly in the browser — no backend proxy needed.
 
 ### Supported Products
-Any sealed product listed on PriceCharting — Pokémon, Magic, Lorcana, One Piece, or Riftbound. Search by product name and Rarebox matches against PriceCharting's catalog.
+Any sealed product listed on PriceCharting — Pokémon, Magic, Lorcana, One Piece, Yu-Gi-Oh!, or Riftbound. Search by product name and Rarebox matches against PriceCharting's catalog.
 
 ### Pricing
 PriceCharting provides current market values based on recent sales data. Prices are fetched via their JSON API. Sealed product prices can be volatile around new releases and YouTube opening content, so the staleness threshold is set to **12 hours** (vs. 24 hours for raw cards).
 
+### Sealed Search Filtering
+When searching for sealed products, Rarebox automatically filters out single cards and accessories:
+
+- Cards are identified by collector number patterns (e.g., `#123`, `123/456`, `BOSH-EN099`)
+- Accessories (sleeves, binders, playmats) are excluded
+- Only products matching sealed keywords (booster box, ETB, tin, etc.) are shown
+
 ## Graded Slabs
 
-Graded slabs are professionally graded cards encased in tamper-proof holders. Rarebox supports four grading companies:
+Graded slabs are professionally graded cards encased in tamper-proof holders. Rarebox supports five grading companies:
 
 - **PSA** (Professional Sports Authenticator)
 - **BGS** (Beckett Grading Services)
 - **CGC** (Certified Guaranty Company)
 - **ACE** (ACE Grading)
+- **SGC** (Sports Card Guaranty) — supported in trade analyzer
 
 ### Grade-Specific Pricing
 Prices vary significantly by grade. A PSA 10 Charizard VMAX Alt Art might be worth 5-10x more than the same card at PSA 7. Rarebox fetches grade-specific pricing from PriceCharting — you select both the card and the grade, and get the market value for that exact combination.

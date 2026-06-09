@@ -1,13 +1,14 @@
 # Deck Builder
 
-The deck builder lets you create and manage competitive Pokémon TCG decks alongside your collection. It cross-references deck lists against your portfolios so you can see what you own and what you still need to buy.
+The deck builder lets you create and manage competitive TCG decks alongside your collection. It supports all 6 TCGs — Pokémon, MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound — and cross-references deck lists against your portfolios so you can see what you own and what you still need to buy.
 
 ## Creating a Deck
 
 1. Navigate to **Decks** in the sidebar
-2. Click **New Deck** and give it a name
-3. Search for cards and add them with one click
-4. Adjust quantities with the +/− controls
+2. Select a TCG from the game filter pills
+3. Click **New Deck** and give it a name
+4. Search for cards and add them with one click
+5. Adjust quantities with the +/− controls
 
 ## Ownership Tracking
 
@@ -29,15 +30,22 @@ A progress bar shows how close you are to having every card in the deck, based o
 
 ## Meta Decks
 
-Rarebox fetches current tournament meta data from **Limitless TCG** and shows the top 8 competitive decks ranked by meta share and championship points.
+Rarebox fetches current tournament meta data from **Limitless TCG** and shows the top competitive decks ranked by meta share and championship points. Meta decks are available for all 6 TCGs.
 
 ### How Meta Decks Work
 
-1. The `/api/search` serverless function scrapes Limitless TCG for current meta standings
+1. The `metaDecksApi` service fetches live data from the serverless endpoint (`/api/search`)
 2. Core cards are resolved server-side with exact card match (set code + number)
-3. Market prices for every card are fetched from TCGPlayer via pokemontcg.io
-4. Results are cached for 24 hours — instant on repeat visits
+3. Market prices for every card are fetched from the appropriate TCG API
+4. Results are cached in localStorage for 24 hours — instant on repeat visits
+5. If the live endpoint is unavailable, static fallback decks are shown
 
 ### Importing a Meta Deck
 
 Click any meta deck to see its full card list. Click **Import** to copy it into your deck builder as a new deck. You can then customize it and track ownership against your collection.
+
+## Multi-TCG Deck Support
+
+Each deck has a `game` field that determines which TCG's cards it contains. The deck builder uses `multiSearch` to find cards across all providers, so you can search for MTG cards in an MTG deck, Yu-Gi-Oh! cards in a Yu-Gi-Oh! deck, and so on.
+
+Card images and prices are resolved from the appropriate API for the deck's game.

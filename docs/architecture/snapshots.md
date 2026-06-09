@@ -35,8 +35,6 @@ snapshots: {
 }
 ```
 
-<!-- TODO: Nova — confirm the actual snapshot data shape and key format -->
-
 Snapshots are keyed by **date string** (`YYYY-MM-DD`), not timestamp. This prevents multiple snapshots per day and makes lookup/deduplication trivial.
 
 ## LOCF (Last Observation Carried Forward)
@@ -81,3 +79,6 @@ LOCF carries the last known price forward. The chart doesn't drop — it flatlin
 
 ### Clock skew
 Snapshots use the browser's local date. If a user's clock is wrong, snapshots might record under the wrong date. This is a known limitation — not worth solving for the client-side-only architecture.
+
+### Multi-TCG price refresh
+Different TCGs have different price sources. The portfolio store fans out price refresh to the appropriate API based on each item's `game` field. Pokémon items use pokemontcg.io; all other TCGs use PriceCharting via `priceFeedService`.

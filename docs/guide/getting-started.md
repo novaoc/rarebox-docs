@@ -4,13 +4,13 @@ Rarebox works in any modern browser — no installation required. Open [rarebox.
 
 ## First Visit
 
-New users see a landing page with feature highlights and a call to action. Once you add your first item, you'll go straight to the dashboard on future visits.
+New users see a landing page with feature highlights and a call to action. On first use, Rarebox prompts you to select which TCGs you collect — this determines which card databases are preloaded in the background. Once you add your first item, you'll go straight to the dashboard on future visits.
 
 ## Adding Your First Card
 
 1. Click **Search** in the navigation
 2. Type a card name (e.g., "Charizard ex")
-3. Browse results — each card shows its image and current TCGPlayer market price
+3. Browse results — each card shows its image and current market price
 4. Click **Add** to add it to your active portfolio
 5. Enter the price you paid (cost basis) and quantity
 
@@ -39,7 +39,44 @@ Click the portfolio name dropdown to create new portfolios. Each gets its own na
 
 ## Bulk Import
 
-Have a PTCGL or PTCGO deck list? Paste the entire list into the **Bulk Import** tool and add all cards at once. The importer matches card names and set codes to the pokemontcg.io database.
+Have a PTCGL or PTCGO deck list? Paste the entire list into the **Bulk Import** tool and add all cards at once. The importer matches card names and set codes against the pokemontcg.io database.
+
+## Collectr Import
+
+Migrating from Collectr? Go to **Settings → Import from Collectr** and upload your CSV or XLSX export. Rarebox parses card names, sets, quantities, conditions, grading info, and cost data. Japanese cards, graded slabs, and sealed products are all handled automatically.
+
+## Scanning Cards
+
+Use the camera scanner to add cards quickly:
+
+1. Click the scan icon in the Search view
+2. Point your camera at a physical card
+3. Tesseract.js OCR extracts the card name
+4. Multi-TCG search resolves the card instantly
+5. Add the resolved card to your portfolio
+
+## Building Decks
+
+1. Navigate to **Decks** in the sidebar
+2. Select a TCG and create a new deck
+3. Search for cards and add them with quantities
+4. The deck builder shows which cards you own vs. need
+5. Import meta decks from Limitless TCG with one click
+
+## Trade Analysis
+
+1. Navigate to **Trade** in the sidebar
+2. Add items to Side A and Side B
+3. Use camera scan or search to add cards
+4. The fairness meter shows if the trade is balanced
+5. Share the analysis via Web Share API
+
+## Setting Price Alerts
+
+1. Open any card's detail view
+2. Click **Set Alert**
+3. Choose above or below a target price
+4. Rarebox notifies you via browser notification when the threshold is crossed
 
 ## Installing as an App
 
@@ -54,4 +91,5 @@ Once installed, it runs as a standalone app without the browser chrome.
 
 - [Managing portfolios](/guide/portfolios) — editing, deleting, combining portfolios
 - [Sealed & graded items](/guide/sealed-and-graded) — how PriceCharting integration works
+- [Deck builder](/guide/deck-builder) — building decks and importing meta decks
 - [Price charts](/guide/price-charts) — understanding the snapshot system
