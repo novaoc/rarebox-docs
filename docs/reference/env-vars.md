@@ -34,5 +34,5 @@ These are configured in the Vercel project settings, not in code:
 
 | Variable | Purpose |
 |----------|---------|
-| `VERCEL_ANALYTICS_ID` | Auto-configured by Vercel when analytics is enabled |
+
 | `VERCEL_TOKEN` | Used for CLI deploys: `vercel --token $VERCEL_TOKEN --yes --prod` |

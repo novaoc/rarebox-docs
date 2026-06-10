@@ -44,7 +44,7 @@ One PR should do one thing. A PR that adds a feature, fixes two bugs, and refact
 ### Things That Will Get Your PR Rejected
 
 - **Breaking persistence** — changes that could lose user data are a non-starter
-- **Removing privacy features** — Rarebox doesn't send user data to servers. Don't add tracking, analytics beyond what's already there, or server-side storage of collection data
+- **Removing privacy features** — Rarebox doesn't send user data to servers and ships zero analytics (removed deliberately in v1.4.2). Don't add tracking or analytics of any kind, or server-side storage of collection data
 - **Uncached API calls** — every external API call must go through the caching layer
 - **Desktop-only UI** — Rarebox has a strong mobile user base. All UI changes must work on mobile
 - **Silent errors** — always log errors in catch blocks with `console.warn` or `console.error`

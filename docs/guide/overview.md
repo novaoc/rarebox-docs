@@ -12,7 +12,7 @@ Most TCG portfolio tools require accounts, store your data on their servers, and
 
 - **No accounts.** No email, no password, no sign-up flow. Open the app and start tracking.
 - **No server-side storage.** Your collection lives in IndexedDB in your browser. Price data is fetched directly from public APIs.
-- **No tracking.** Vercel Analytics collects anonymized page views and Core Web Vitals — no cookies, no cross-site tracking, no PII.
+- **No tracking. At all.** No analytics, no page-view counting, no cookies, no fingerprinting — the app ships zero tracking scripts. It works fully offline, which is the proof: your collection never needs to talk to a server.
 - **Open source.** MIT licensed. Fork it, modify it, self-host it.
 
 ## What it does

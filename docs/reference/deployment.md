@@ -95,12 +95,7 @@ This only serves the frontend. You'd need a separate container or service for th
 
 ## Analytics
 
-Rarebox uses two Vercel services for anonymized metrics:
-
-- **Vercel Analytics** — page views, no cookies, no PII
-- **Vercel Speed Insights** — Core Web Vitals (LCP, FID, CLS)
-
-Both are opt-in at the Vercel project level. Self-hosted instances won't have analytics unless you configure your own.
+There are none — removed in v1.4.2 as a deliberate privacy decision. Rarebox ships no analytics scripts, counts no page views, and sets no cookies. If you self-host a fork, please keep it that way (see the contributing guidelines).
 
 ## Domain Setup
 
