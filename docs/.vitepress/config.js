@@ -42,6 +42,7 @@ export default defineConfig({
             { text: 'Deck Builder', link: '/guide/deck-builder' },
             { text: 'Price Charts & Snapshots', link: '/guide/price-charts' },
             { text: 'Backup & Transfer', link: '/guide/backup-and-transfer' },
+            { text: 'Card Booth', link: '/guide/booth' },
             { text: 'PWA & Offline', link: '/guide/pwa' },
           ],
         },

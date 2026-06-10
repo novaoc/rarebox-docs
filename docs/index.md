@@ -46,6 +46,10 @@ features:
   - icon: 📷
     title: Card Scanning
     details: Point your camera at a card and Rarebox identifies the exact printing in about a second by matching the artwork itself (perceptual hashing — the technique industrial card sorters use), with OCR as fallback. Straight onto your shelf.
+  - icon: 🏪
+    title: Card Booth
+    details: Set up your table for a card show — list what you're selling with your prices and share it as a link or QR. The whole booth travels inside the link itself, no servers involved. Buyers can save shops to revisit, even offline.
+    link: /guide/booth
   - icon: 🔔
     title: Price Alerts
     details: Set price thresholds on any card. Get browser notifications when prices cross your target — above or below.
