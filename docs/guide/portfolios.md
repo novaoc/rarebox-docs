@@ -1,14 +1,18 @@
-# Portfolios
+# Shelves
 
-Rarebox supports multiple named portfolios, each with a color and their own value chart. The dashboard combines all portfolios into a single view showing total collection value, cost basis, and gain/loss.
+Rarebox organizes your collection into **shelves** — multiple named groups, each with a color and its own value chart. The dashboard combines all shelves into a single view showing total collection value, cost basis, and gain/loss.
 
-## Creating a Portfolio
+::: tip Why "shelf"?
+Most trackers call these *shelves*, and that word carries the wrong energy — Rarebox is a tool for collectors and hobbyists, not fund managers. A shelf is what your cards actually live on: the binder shelf, the slab shelf, the "do not touch" shelf. Same data, friendlier vocabulary. (You'll still see `shelf` in code, URLs, and exports' internals — the rename is purely how the app speaks.)
+:::
 
-Click the portfolio dropdown in the header and select **New Portfolio**. Give it a name and pick a color — the color appears in the dashboard charts so you can distinguish between portfolios at a glance.
+## Creating a Shelf
 
-## Portfolio Items
+Click the shelf dropdown in the header and select **New Shelf**. Give it a name and pick a color — the color appears in the dashboard charts so you can distinguish between shelves at a glance.
 
-Each item in a portfolio tracks:
+## Shelf Items
+
+Each item in a shelf tracks:
 
 - **Card/product identity** — name, set, image, type (card / sealed / graded), game (pokemon / mtg / yugioh / lorcana / one-piece / riftbound)
 - **Cost basis** — what you paid
@@ -16,9 +20,9 @@ Each item in a portfolio tracks:
 - **Current market price** — fetched live from the appropriate API for the TCG
 - **Gain/loss** — absolute and percentage, calculated from cost basis vs. current price
 
-## Multi-TCG Portfolios
+## Multi-TCG Shelves
 
-A single portfolio can contain items from any of the 6 supported TCGs. Each item tracks which game it belongs to via the `game` field. Price refresh fans out to the appropriate API based on the game:
+A single shelf can contain items from any of the 6 supported TCGs. Each item tracks which game it belongs to via the `game` field. Price refresh fans out to the appropriate API based on the game:
 
 - **Pokémon:** pokemontcg.io (TCGPlayer market prices)
 - **MTG:** PriceCharting (via priceFeedService)
@@ -31,20 +35,20 @@ A single portfolio can contain items from any of the 6 supported TCGs. Each item
 
 The dashboard view shows:
 
-- Total portfolio value across all portfolios
+- Total shelf value across all shelves
 - Total cost basis
 - Total gain/loss (absolute + percentage)
-- Portfolio value-over-time chart (combined and per-portfolio)
-- Individual portfolio breakdowns
+- Shelf value-over-time chart (combined and per-shelf)
+- Individual shelf breakdowns
 - Quick actions (add card, import, browse sets)
 
 ## Editing Items
 
-Click any item in the portfolio table to edit quantity, cost basis, or to remove it. Changes persist immediately via debounced writes to IndexedDB.
+Click any item in the shelf table to edit quantity, cost basis, or to remove it. Changes persist immediately via debounced writes to IndexedDB.
 
 ## Grouping & Sorting
 
-The portfolio view supports grouping items by:
+The shelf view supports grouping items by:
 
 - **Game** — see all Pokémon cards together, all MTG cards together, etc.
 - **Set** — group by TCG set
@@ -53,10 +57,10 @@ The portfolio view supports grouping items by:
 
 Sorting options include name, value, date added, and cost basis.
 
-## Deleting a Portfolio
+## Deleting a Shelf
 
-Deleting a portfolio removes all its items, associated snapshots, and price history data. This action is irreversible — export or backup first if you want to keep the data.
+Deleting a shelf removes all its items, associated snapshots, and price history data. This action is irreversible — export or backup first if you want to keep the data.
 
 ::: warning
-Deleted items are cleaned up from snapshots automatically. The stale data cleanup runs on portfolio mutations to prevent orphaned snapshot entries from accumulating.
+Deleted items are cleaned up from snapshots automatically. The stale data cleanup runs on shelf mutations to prevent orphaned snapshot entries from accumulating.
 :::

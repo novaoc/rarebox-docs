@@ -152,6 +152,11 @@ scan float on the page — the frame is what ties photography into the design.
 
 Copy is confident, concrete, and a little playful — "Your binder deserves
 better", "Built for the pull", "Know your gains". No jargon, no hedging.
+
+**Vocabulary**: collections are **shelves**, never *portfolios* — Rarebox
+talks to collectors and hobbyists, not fund managers. The plural is
+*shelves*. Code identifiers and routes keep the legacy `portfolio` naming;
+the rule applies to everything a user reads.
 Competitors are not named in comparisons; switching is framed as easy
 ("bring your whole collection in one CSV").
 

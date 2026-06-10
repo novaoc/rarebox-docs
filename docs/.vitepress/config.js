@@ -37,7 +37,7 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/guide/overview' },
             { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Portfolios', link: '/guide/portfolios' },
+            { text: 'Shelves', link: '/guide/portfolios' },
             { text: 'Sealed & Graded', link: '/guide/sealed-and-graded' },
             { text: 'Deck Builder', link: '/guide/deck-builder' },
             { text: 'Price Charts & Snapshots', link: '/guide/price-charts' },

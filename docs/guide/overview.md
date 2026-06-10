@@ -1,6 +1,6 @@
 # Overview
 
-Rarebox is a privacy-first multi-TCG portfolio tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) across Pokémon, Magic: The Gathering, Yu-Gi-Oh!, Disney Lorcana, One Piece, and Riftbound — with live market prices and portfolio value charts.
+Rarebox is a privacy-first multi-TCG collection tracker that runs entirely in your browser. It tracks cards, sealed products (booster boxes, ETBs, tins), and graded slabs (PSA / BGS / CGC / ACE) across Pokémon, Magic: The Gathering, Yu-Gi-Oh!, Disney Lorcana, One Piece, and Riftbound — with live market prices and shelf value charts.
 
 **Live at [rarebox.io](https://rarebox.io)** · **Source on [GitHub](https://github.com/novaoc/rarebox)**
 
@@ -17,8 +17,8 @@ Most TCG portfolio tools require accounts, store your data on their servers, and
 
 ## What it does
 
-### Portfolio Tracking
-Create multiple named portfolios, each with a color and their own value chart. Add cards by searching any set, add sealed products and graded slabs with grade-specific pricing. See total collection value, cost basis, and gain/loss across all portfolios.
+### Shelf Tracking
+Create multiple named shelves (Rarebox speaks collector, not investor), each with a color and their own value chart. Add cards by searching any set, add sealed products and graded slabs with grade-specific pricing. See total collection value, cost basis, and gain/loss across all shelves.
 
 ### Multi-TCG Support
 Six trading card games are supported out of the box:
@@ -48,7 +48,7 @@ Set price thresholds on any card (above or below a target price). Rarebox checks
 Browse every English and Japanese Pokémon set with logos, series, release dates, and card counts. Browse MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound sets via the generic TCG browse system. Multi-TCG search across all 6 games with TCG filter pills.
 
 ### Price Charts
-Card price history going back to November 2022. Portfolio value-over-time charts using a last-observation-carried-forward (LOCF) system. Daily price snapshots for sealed and graded items with 3 years of history retention.
+Card price history going back to November 2022. Shelf value-over-time charts using a last-observation-carried-forward (LOCF) system. Daily price snapshots for sealed and graded items with 3 years of history retention.
 
 ### Backup & Transfer
 Export to Excel, backup as JSON, transfer between devices via gzip-compressed QR code or clipboard. Import from Collectr (CSV/XLSX) to migrate from other tools. Your data is portable.

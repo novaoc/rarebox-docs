@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Rarebox
   text: Documentation
-  tagline: Privacy-first multi-TCG portfolio tracker — cards, sealed products, graded slabs, live prices, value charts, deck building, trade analysis, and card scanning. Now wearing Tactile, a custom design system built for collectors.
+  tagline: Privacy-first multi-TCG collection tracker — cards, sealed products, graded slabs, live prices, value charts, deck building, trade analysis, and card scanning. Now wearing Tactile, a custom design system built for collectors.
   actions:
     - theme: brand
       text: Get Started
@@ -26,13 +26,13 @@ features:
     details: 20,000+ Pokémon cards load in about ten seconds via the official bulk dataset; prices stream in through a background pass with automatic resume. Search works offline once loaded.
   - icon: 📦
     title: Collection Management
-    details: Track cards, sealed products, and graded slabs across multiple named portfolios with live pricing from TCGPlayer and PriceCharting. Supports Pokémon, MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound.
+    details: Track cards, sealed products, and graded slabs across multiple named shelves — Rarebox speaks collector, not investor with live pricing from TCGPlayer and PriceCharting. Supports Pokémon, MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound.
   - icon: 🔒
     title: Privacy by Design
     details: All data stored locally in your browser via IndexedDB. No accounts, no server-side storage — your collection never leaves your device.
   - icon: 📊
     title: Price Charts & Snapshots
-    details: Historical price charts, portfolio value over time with LOCF, daily price snapshots, and per-type staleness thresholds.
+    details: Historical price charts, shelf value over time with LOCF, daily price snapshots, and per-type staleness thresholds.
   - icon: 🃏
     title: Deck Builder
     details: Build competitive decks, cross-reference against your collection, track ownership, and import meta decks from Limitless TCG for all 6 TCGs.
