@@ -91,8 +91,12 @@ tight letter-spacing (−0.03em).
   favicon and PWA icon (`public/favicon.svg`, `public/icon-192.svg`).
 - Always uppercase **RB** in the mark. Always lowercase **rarebox** in the
   wordmark.
-- Don't recolor the sticker, drop the border, or un-rotate it. On dark or
-  photographic surfaces, keep the sticker as-is — it's self-contained.
+- The sticker face is **theme-aware**: it binds to `--accent` (brand yellow
+  in light, butter in dark). Border, RB glyph, and shadow are pinned to the
+  unchanging dark ink (`--on-accent`) so the sticker stays self-contained
+  in both themes. The SVG favicon follows the OS scheme via an embedded
+  `prefers-color-scheme` query; PWA PNG icons ship the light variant.
+- Beyond that, don't recolor the sticker, drop the border, or un-rotate it.
 
 ## Components (from `main.css`)
 
@@ -193,9 +197,11 @@ second design. The rules that keep it Tactile:
   like pages in a binder.
 - **Accents follow Material's dark rule**: lifted, desaturated tones (the
   200–50 range — saturated colors vibrate on dark) paired with dark text
-  via `--on-accent`/`--on-danger`/`--on-info`. Dark values: gold `#d9a92f`,
-  success `#4cc285`, danger `#e07a76`, info `#8fb3f9`, pink `#ea93b7` —
-  all fills measure ≥6.3:1 against their dark text.
+  via `--on-accent`/`--on-danger`/`--on-info`. Dark values: butter
+  `#e8c558` (the brand yellow tone-lifted, not darkened — darkening reads
+  muddy), success `#4cc285`, danger `#e07a76`, info `#8fb3f9`, pink
+  `#ea93b7` — all fills measure ≥6.3:1 against their dark text, butter at
+  11:1 against both surface and text.
 - Readable on-surface colored text uses `--success-text` / `--accent-text` /
   `--danger-text` (brighter in dark, darker in light) — never raw accent
   tokens as text. Body text clears Material's 15.8:1 surface rule.
