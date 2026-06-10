@@ -6,6 +6,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+  cleanUrls: true,
   title: 'Rarebox Docs',
   description: 'Documentation for Rarebox — the privacy-first multi-TCG portfolio tracker',
   
