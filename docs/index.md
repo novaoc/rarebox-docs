@@ -23,13 +23,17 @@ features:
     link: /design/tactile
   - icon: ⚡
     title: 10-Second Card Database
-    details: 20,000+ Pokémon cards load in about ten seconds via the official bulk dataset; prices stream in through a background pass with automatic resume. Search works offline once loaded.
+    details: 20,000+ Pokémon cards load in about ten seconds via the official bulk dataset; prices stream in through a background pass with automatic resume. And since the whole app works offline, so does search.
   - icon: 📦
     title: Collection Management
     details: Track cards, sealed products, and graded slabs across multiple named shelves — Rarebox speaks collector, not investor with live pricing from TCGPlayer and PriceCharting. Supports Pokémon, MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound.
   - icon: 🔒
     title: Privacy by Design
     details: All data stored locally in your browser via IndexedDB. No accounts, no server-side storage — your collection never leaves your device.
+  - icon: 📡
+    title: Works Offline
+    details: A service worker precaches the whole app on first visit — shelf, decks, search, and browse all work with zero signal, like a binder. Only live prices and new searches need a connection, and the app says so when they do.
+    link: /guide/pwa
   - icon: 📊
     title: Price Charts & Snapshots
     details: Historical price charts, shelf value over time with LOCF, daily price snapshots, and per-type staleness thresholds.
@@ -41,7 +45,7 @@ features:
     details: Compare Side A vs Side B with fair market values, grading support (PSA/BGS/CGC/ACE), and a fairness meter for informed trading decisions.
   - icon: 📷
     title: Card Scanning
-    details: Scan physical cards with your camera — OCR extracts the card name, then multi-TCG search resolves it instantly. Add cards to your portfolio in seconds.
+    details: Point your camera at a card and Rarebox identifies the exact printing in about a second by matching the artwork itself (perceptual hashing — the technique industrial card sorters use), with OCR as fallback. Straight onto your shelf.
   - icon: 🔔
     title: Price Alerts
     details: Set price thresholds on any card. Get browser notifications when prices cross your target — above or below.

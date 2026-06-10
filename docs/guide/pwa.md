@@ -1,6 +1,6 @@
-# PWA Installation
+# PWA & Offline
 
-Rarebox is a Progressive Web App (PWA) — it can be installed on your device and runs as a standalone app without browser chrome.
+Rarebox is a Progressive Web App (PWA) — it can be installed on your device, runs as a standalone app without browser chrome, and **works fully offline** once it has loaded.
 
 ## Android
 
@@ -29,4 +29,24 @@ PWA updates happen automatically in the background. When Rarebox deploys a new v
 
 ## Offline Support
 
-Rarebox caches card data in IndexedDB after the initial preload. Once cached, search and browse work offline. Price refreshes and meta deck updates require an internet connection.
+Rarebox works offline like a binder does — since v1.4.2, the entire app is available with zero connection after your first visit.
+
+Two layers make that work:
+
+1. **Your data was always on-device.** The card database, your shelves, decks, purchase history, and price snapshots live in IndexedDB in your browser — they never depended on a server.
+2. **The app itself is now on-device too.** A service worker precaches the app shell (every page, script, and style) on your first visit, so opening Rarebox and moving between Shelf, Search, Browse, Decks, and Trade needs no network at all. Card images are cached as you view them; tour videos and scanner indexes cache on first use.
+
+### What needs a connection
+
+Anything that is *live* by nature — and only that:
+
+- Refreshing prices
+- Searching for cards in games you haven't downloaded
+- Importing current meta decks
+- Loading images for cards you've never viewed before
+
+When you're offline, a chip appears at the bottom of the app: *"Offline — your shelf still works. Live prices & new searches need a connection."* It clears itself the moment you're back online. Cards whose images aren't cached yet display on a text-only placeholder mat rather than a broken image.
+
+### Implementation notes
+
+The service worker is generated at build time (`scripts/sw-template.js` + a Vite plugin) with the precache manifest injected. Navigations are **network-first** with the cached shell as fallback — so fresh deploys always win when you're online, and updates roll out on the next launch. Hashed assets are cache-first (immutable). Price and search API calls are never intercepted — live data is never served stale. Cross-origin card images are re-requested with CORS where the CDN allows it and skipped otherwise, because opaque responses carry a ~7 MB storage-quota penalty each in Chromium.
