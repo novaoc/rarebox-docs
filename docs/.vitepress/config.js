@@ -7,10 +7,10 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'Rarebox Docs',
-  description: 'Documentation for Rarebox — the privacy-first Pokémon TCG portfolio tracker',
+  description: 'Documentation for Rarebox — the privacy-first multi-TCG portfolio tracker',
   
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>" }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
     ['meta', { property: 'og:title', content: 'Rarebox Docs' }],
     ['meta', { property: 'og:description', content: 'Developer and user documentation for Rarebox' }],
     ['meta', { property: 'og:type', content: 'website' }],
@@ -22,6 +22,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Guide', link: '/guide/overview' },
+      { text: 'Design', link: '/design/tactile' },
       { text: 'Architecture', link: '/architecture/project-structure' },
       { text: 'Contributing', link: '/contributing/setup' },
       { text: 'Rarebox', link: 'https://rarebox.io' },
@@ -41,6 +42,14 @@ export default defineConfig({
             { text: 'Price Charts & Snapshots', link: '/guide/price-charts' },
             { text: 'Backup & Transfer', link: '/guide/backup-and-transfer' },
             { text: 'PWA Installation', link: '/guide/pwa' },
+          ],
+        },
+      ],
+      '/design/': [
+        {
+          text: 'Design',
+          items: [
+            { text: 'Tactile — Design System & Branding', link: '/design/tactile' },
           ],
         },
       ],

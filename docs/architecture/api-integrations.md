@@ -11,6 +11,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 **Endpoint:** `https://api.pokemontcg.io/v2/cards`
 
 **Key details:**
+- **Bulk card data comes from the official `PokemonTCG/pokemon-tcg-data` GitHub dataset via the jsDelivr CDN** — 173 per-set JSON files fetched 12-wide load all 20,000+ cards in ~10 seconds (the paginated API averages 7–30s *per page*). The API is then used only for a background price pass (`select=id,tcgplayer`, 6 pages in parallel, incremental saves every ~15 pages, automatic resume if interrupted)
 - Responses are trimmed using the `select=` query parameter to reduce payload size by 50-60%
 - Rate limit: 20,000 requests/day without an API key, higher with a key
 - Optional API key can be passed via `X-Api-Key` header for higher rate limits
@@ -68,7 +69,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 - CORS `*` — no proxy needed
 - Search by card name (`fname` parameter)
 - Card images from YGOPRODeck CDN
-- Prices from `card_prices[0].tcgplayer_price` or `card_prices[0].cardmarket_price`
+- Prices: each printing uses its **own `card_sets[].set_price`** (the card-level `tcgplayer_price` reflects the cheapest reprint and is only a fallback) — a $1.85 Metal Raiders common was showing $0.20 before this distinction
 - Set information from `card_sets[0]`
 - Results cached in memory for 1 hour
 
@@ -114,12 +115,12 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 - 7 sets (Origins, Spiritforged, Unleashed, promo sets), 1000+ cards
 - Card images from Riot Games CDN (`cmsassets.rgpub.io`)
 - Pagination: 50 cards per page
-- **No prices** — card data only. Prices come from PriceCharting via `priceFeedService` for portfolio items
+- **No prices** — card data only. Prices come from PriceCharting, merged variant-aware (see note below)
 - `tcgplayer_id` field available for price lookups if needed
 - Results cached in memory for 1 hour
 
-::: note Price Source
-riftcodex provides card metadata and images. For pricing, Rarebox uses PriceCharting's JSON search endpoint (same as sealed/graded). When a card is added to the portfolio, `priceFeedService` queries PriceCharting for the current market value.
+::: note Price Source — variant-aware
+riftcodex provides card metadata and images; prices come from PriceCharting. Because PriceCharting caps each search at 100 products, the browse provider runs **three queries per set** (base, `signature`, `alternate art`), de-duplicates, and filters by console name. Variant printings (`(Signature)`, `(Alternate Art)`) only ever take their own bracketed PriceCharting listing — **a variant never falls back to the plain card's price** (no price beats a wrong one). `(Overnumbered)` is the plain printing of an over-set-size champion. Search, trade analyzer, portfolio refresh, and the offline cache all hydrate from this same per-set price map.
 :::
 
 ## PriceCharting

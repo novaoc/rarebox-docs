@@ -2,6 +2,8 @@
 
 Documentation site for [Rarebox](https://rarebox.io) — the privacy-first multi-TCG portfolio tracker.
 
+Covers the user guide, the **Tactile design system & branding guidelines** (`/design/tactile`), architecture, API integrations, and contributing docs. Updated for Rarebox v1.4.0 (the Tactile release).
+
 **Live at [docs.rarebox.io](https://docs.rarebox.io)**
 
 Built with [VitePress](https://vitepress.dev).

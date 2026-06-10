@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Rarebox
   text: Documentation
-  tagline: Privacy-first multi-TCG portfolio tracker — cards, sealed products, graded slabs, live prices, value charts, deck building, trade analysis, and card scanning.
+  tagline: Privacy-first multi-TCG portfolio tracker — cards, sealed products, graded slabs, live prices, value charts, deck building, trade analysis, and card scanning. Now wearing Tactile, a custom design system built for collectors.
   actions:
     - theme: brand
       text: Get Started
@@ -17,6 +17,13 @@ hero:
       link: https://github.com/novaoc/rarebox
 
 features:
+  - icon: 🟡
+    title: Tactile Design System
+    details: Cream paper, ink lines, hard shadows that compress when pressed. Bottom tab navigation on phones and foldables, top bar on desktop. Verified from 280px foldable covers to desktop. See the Design section for branding guidelines.
+    link: /design/tactile
+  - icon: ⚡
+    title: 10-Second Card Database
+    details: 20,000+ Pokémon cards load in about ten seconds via the official bulk dataset; prices stream in through a background pass with automatic resume. Search works offline once loaded.
   - icon: 📦
     title: Collection Management
     details: Track cards, sealed products, and graded slabs across multiple named portfolios with live pricing from TCGPlayer and PriceCharting. Supports Pokémon, MTG, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound.

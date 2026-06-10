@@ -34,7 +34,7 @@ The app uses Vue Router's `<RouterView>` with `v-slot` to animate route transiti
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| `App.vue` | `src/App.vue` | Root component. Initializes store, renders sidebar nav, topbar with page title, tour replay info icon, and router view. Contains New Portfolio modal, background card preloader, and global error handler. |
+| `App.vue` | `src/App.vue` | Root component. Initializes store, renders the top bar (desktop nav) and bottom tab bar (mobile/foldable/tablet), tour replay info icon, and router view. Contains New Portfolio modal, background card preloader, and global error handler. |
 | `InstallPrompt.vue` | `src/components/InstallPrompt.vue` | PWA install prompt. Detects platform (Android/iOS). Android shows native install button; iOS shows step-by-step guide modal. Auto-hides in standalone mode. |
 | `TourModal.vue` | `src/components/TourModal.vue` | Feature tour video modal. Plays mp4 on first visit, keyed by localStorage. Replayable via info icon in topbar. Full-width bottom sheet on mobile. |
 

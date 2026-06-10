@@ -4,7 +4,7 @@ The deck builder lets you create and manage competitive TCG decks alongside your
 
 ## Creating a Deck
 
-1. Navigate to **Decks** in the sidebar
+1. Navigate to **Decks** (top bar on desktop, More menu on mobile)
 2. Select a TCG from the game filter pills
 3. Click **New Deck** and give it a name
 4. Search for cards and add them with one click

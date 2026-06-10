@@ -57,7 +57,7 @@ Use the camera scanner to add cards quickly:
 
 ## Building Decks
 
-1. Navigate to **Decks** in the sidebar
+1. Navigate to **Decks** (top bar on desktop, More menu on mobile)
 2. Select a TCG and create a new deck
 3. Search for cards and add them with quantities
 4. The deck builder shows which cards you own vs. need
@@ -65,7 +65,7 @@ Use the camera scanner to add cards quickly:
 
 ## Trade Analysis
 
-1. Navigate to **Trade** in the sidebar
+1. Navigate to **Trade** (top bar on desktop, the raised center tab on mobile)
 2. Add items to Side A and Side B
 3. Use camera scan or search to add cards
 4. The fairness meter shows if the trade is balanced

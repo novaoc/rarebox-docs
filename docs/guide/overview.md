@@ -4,6 +4,8 @@ Rarebox is a privacy-first multi-TCG portfolio tracker that runs entirely in you
 
 **Live at [rarebox.io](https://rarebox.io)** · **Source on [GitHub](https://github.com/novaoc/rarebox)**
 
+Since v1.4.0 the app wears **[Tactile](/design/tactile)** — a custom design system with a bottom tab bar on phones/foldables/tablets and a top bar on desktop. Five alternative design prototypes remain live at [rarebox.io/designs](https://rarebox.io/designs).
+
 ## Why Rarebox?
 
 Most TCG portfolio tools require accounts, store your data on their servers, and lock you into their ecosystem. Rarebox takes a different approach:
