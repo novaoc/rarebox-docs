@@ -174,6 +174,29 @@ Competitors are not named in comparisons; switching is framed as easy
   `width: 100vw; margin-left: calc(50% - 50vw)` — `overflow-x: clip` on
   `html/body` guards against scrollbar-width overflow.
 
+## Dark Tactile
+
+Dark mode is a token remap (`:root[data-theme="dark"]` in `main.css`), not a
+second design. The rules that keep it Tactile:
+
+- **Warm coal, not black.** Paper flips to `#16140e`, surfaces to `#211e15`
+  — cream's dark twin, never neutral gray or pure black.
+- **Ink flips to cream** (`#f0e8d8`) for lines and text. Borders stay 2px.
+- **Accent fills never change**, and text on them never flips: use
+  `--on-accent` (always dark) for anything sitting on a yellow/green/pink
+  fill. Text on `-dim` tints and plain surfaces uses `--ink` (flips).
+- **Shadows become true black.** A light hard shadow reads as a glow, and
+  Tactile never glows. Press-compression behavior is identical.
+- **The marker becomes an underline** in dark — a full marker band behind
+  light text would kill contrast.
+- **Card photos keep white mats in both themes** — scans belong on white,
+  like pages in a binder.
+- Readable on-surface colored text uses `--success-text` / `--accent-text`
+  (brighter in dark, darker in light) — never raw `--success`/`--accent`
+  as text.
+- Switching: sun/moon in the top bar, More sheet on mobile, Light/Dark/System
+  in Settings. Stored in `localStorage('rarebox_theme')`, applied pre-paint.
+
 ## The Design Lab
 
 Five complete brand directions were prototyped before Tactile won:
