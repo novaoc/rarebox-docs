@@ -14,6 +14,8 @@ reach you.
    tape it to the table). Small booths fit in a single QR that any phone
    camera can scan — it's just a link. Bigger booths switch to an animated
    multi-frame code, scanned from inside Rarebox (Booth → Scan a booth).
+   Need something tweet-sized? **Shorten for socials** turns the full link
+   into a TinyURL — see the privacy note below.
 3. **Buyers browse** — opening the link shows your booth read-only: every
    listing with your price, and the full-table total. One tap on
    **Save this shop** archives it on their device, so they can check your
@@ -22,6 +24,20 @@ reach you.
 Update your booth any time; share again and the new link/QR carries the
 updated listings. Old links keep showing what they carried when shared —
 which also means a shared booth is a snapshot, not a live feed.
+
+## Built for visitors
+
+Buyers don't need Rarebox, and a shared booth never pressures them into it:
+
+- **No popups.** Booth pages never show the card-database picker or
+  download-progress indicators — someone scanning five booths at a show
+  sees five booths, nothing else.
+- **One small invite.** First-time visitors get a single dismissible banner
+  above the booth ("made with Rarebox — track your own collection free").
+  Dismiss it once and it never returns.
+- **Uniform listings.** Card scans, booster boxes, and tins all frame into
+  the same white mat regardless of image shape, so a booth reads as one
+  tidy table.
 
 ## No servers, by design
 
@@ -35,6 +51,18 @@ Practical sizes: listings compress to roughly 25–60 bytes each. Up to ~60–10
 listings fit in a single camera-scannable QR; beyond that the animated code
 takes over and links keep working into the hundreds of listings (some chat
 apps truncate very long URLs — if a link misbehaves, the QR always works).
+
+### Short links
+
+**Shorten for socials** (in the share dialog) trades a little purity for a
+lot of convenience: it asks TinyURL to wrap your full link, straight from
+your device — the request never passes through Rarebox. Two things to know:
+
+- The short link (and therefore your booth's contents) is **stored in
+  TinyURL's database**. Booths are meant to be public, but it's the one
+  share path where a third party holds a copy.
+- Opening a short link **requires internet** (it's a redirect). The QR and
+  the full link stay self-contained and work offline once saved.
 
 ## Saved shops
 
