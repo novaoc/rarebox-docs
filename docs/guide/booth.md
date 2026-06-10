@@ -16,6 +16,9 @@ reach you.
    multi-frame code, scanned from inside Rarebox (Booth → Scan a booth).
    Need something tweet-sized? **Shorten for socials** turns the full link
    into a TinyURL — see the privacy note below.
+   For printing or posting, **Download as picture** builds a Tactile-branded
+   QR poster (booth name, venue, table total, scannable code) ready for
+   socials or a table stand.
 3. **Buyers browse** — opening the link shows your booth read-only: every
    listing with your price, and the full-table total. One tap on
    **Save this shop** archives it on their device, so they can check your
