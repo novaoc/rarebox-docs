@@ -45,7 +45,7 @@ Anything that is *live* by nature — and only that:
 - Importing current meta decks
 - Loading images for cards you've never viewed before
 
-When you're offline, a chip appears at the bottom of the app: *"Offline — your shelf still works. Live prices & new searches need a connection."* It clears itself the moment you're back online. Cards whose images aren't cached yet display on a text-only placeholder mat rather than a broken image.
+When you're offline, a chip appears at the bottom of the app: *"Offline — your shelf still works. Live prices & new searches need a connection."* It clears itself the moment you're back online. Cards whose images aren't cached yet wear an **offline sleeve** — a patterned, pastel card back with a monogram sticker and the card's name, generated on the spot from the name itself (the same card always gets the same sleeve). An uncached shelf looks like a deliberate set of alternate-art card backs, not a grid of broken images.
 
 ### Implementation notes
 
