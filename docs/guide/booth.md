@@ -68,11 +68,18 @@ moment Table mode (Booth → 🔥 Table) is built for. It's a full-screen,
 one-thumb view of your own booth:
 
 - **💵 Sold / 🔁 Trade** buttons on every row: quantity drops (the listing
-  disappears at zero), with an **Undo** toast for mis-taps.
-- **Find-as-you-type** filter over your own listings, and a **+ Add** search
-  for cards you just bought mid-show.
-- A **day journal** records every sale and trade-out: live recap chips show
-  cash taken and value traded today, and the day's log sits at the bottom.
+  disappears at zero), with an **Undo** toast that reverses whole deals.
+- **Trades record both sides.** The Trade sheet asks what came in: search
+  any card or sealed product, set the agreed value, and tick "list it" to
+  put it straight on the table — plus cash on top in either direction.
+  "A 151 booster box + $20 for an OP-05 box" is one logged deal.
+- **Buy mode** in the + Add search: flip the toggle, enter what you paid,
+  and the cost comes off your table cash. Net cash **can go negative** —
+  buying hard mid-show is normal dealering, and the ledger says so plainly.
+- The **ledger** drives live recap chips (net cash, trades, buys) and a
+  day log. **📊 Export Excel** turns any booth into a workbook: Summary
+  (all-time and today — sales, buys, trades in/out, net cash), Ledger
+  (every movement, timestamped, trades grouped), and current Listings.
   No photos to reconstruct from, no spreadsheet at midnight.
 
 ### The live QR
@@ -83,6 +90,21 @@ that **re-encodes itself every time your inventory changes**, with the
 screen kept awake. Prop a phone or tablet on a stand facing the aisle, and
 every buyer who scans gets the booth as it exists *right now* — mark a card
 sold and the code on the stand is already correct.
+
+### Run it from your phone (remote display)
+
+Better still: put the QR on one device and the controls on another.
+Inside the Live QR screen, **📡 Show on another device** makes a pairing
+code — scan it with a tablet's camera (or open the link there) and that
+screen becomes the booth display. Every sale, trade, and price change you
+make on your phone re-encodes the tablet's QR within seconds.
+
+How it travels, honestly: updates go through [ntfy.sh](https://ntfy.sh),
+a free public relay, **end-to-end encrypted** — the key is born inside
+the pairing code and never leaves your two devices, so the relay only
+ever carries scrambled bytes on a random channel. Same trade-off family
+as short links, disclosed the same way. If the venue network is hostile,
+put the tablet on your phone's hotspot and everything still works.
 
 ## Booth branding
 
