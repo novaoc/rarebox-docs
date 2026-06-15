@@ -17,7 +17,7 @@ Think of it as a development harness: specs, rules, tests, CI, and review checkl
 
 ### Main Rarebox repo
 
-Repository: <https://github.com/novaoc/rarebox>
+Repository: the Rarebox main app repository
 
 Important files:
 
@@ -32,7 +32,7 @@ Important files:
 
 ### Rarebox agent rebuild kit
 
-Repository: <https://github.com/novaoc/rarebox-agent-harness>
+Repository: the Rarebox agent harness repository
 
 This repo rebuilds the dedicated `rarebox` Hermes profile and syncs the harness files into a Rarebox checkout.
 
@@ -151,7 +151,7 @@ What each check proves:
 To check CI:
 
 ```bash
-gh run list --repo novaoc/rarebox --workflow "Harness CI" --branch main --limit 5
+gh run list --repo <owner>/rarebox --workflow "Harness CI" --branch main --limit 5
 ```
 
 A healthy run should complete in a few minutes. If it hangs near the 15-minute timeout, inspect the smoke test first: a passed browser test can still leave a preview server alive if process cleanup regresses.
@@ -219,8 +219,8 @@ Start with the error type.
 Look at the failed GitHub run:
 
 ```bash
-gh run list --repo novaoc/rarebox --workflow "Harness CI" --limit 5
-gh run view <run-id> --repo novaoc/rarebox --log-failed
+gh run list --repo <owner>/rarebox --workflow "Harness CI" --limit 5
+gh run view <run-id> --repo <owner>/rarebox --log-failed
 ```
 
 Then map it:
