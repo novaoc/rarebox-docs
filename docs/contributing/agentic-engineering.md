@@ -50,7 +50,7 @@ It does not contain secrets, session databases, logs, tokens, backups, or runtim
 
 ### Dedicated `rarebox` Hermes profile
 
-The `rarebox` profile is intentionally not Nova. It is a focused engineering agent for Rarebox.
+The `rarebox` profile is a focused engineering agent for Rarebox.
 
 It should be used for:
 
@@ -64,7 +64,6 @@ It should be used for:
 It should not be used for:
 
 - posting social content
-- speaking as Nova
 - using Telegram/social tokens
 - making broad product decisions without you
 
@@ -91,10 +90,10 @@ rarebox -z "Read AGENTS.md and tell me what checks are required before changing 
 To verify the agent identity:
 
 ```bash
-rarebox -z "In two sentences, identify your role and state whether you are Nova. Do not use tools."
+rarebox -z "In two sentences, identify your role and scope. Do not use tools."
 ```
 
-Expected answer: it should identify as the Rarebox engineering agent and say it is not Nova.
+Expected answer: it should identify as the Rarebox engineering agent focused on Rarebox development.
 
 ## If you want to build a new feature, where do you start?
 
