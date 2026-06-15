@@ -101,7 +101,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Rarebox is open source and privacy-first.',
+      copyright: 'Built by <a href="https://www.threads.com/@novaoc_18584" target="_blank">Nova</a>',
     },
   },
 })
