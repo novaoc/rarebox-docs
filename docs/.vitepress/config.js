@@ -74,6 +74,7 @@ export default defineConfig({
           items: [
             { text: 'Development Setup', link: '/contributing/setup' },
             { text: 'Code Style', link: '/contributing/code-style' },
+            { text: 'Agentic Engineering', link: '/contributing/agentic-engineering' },
             { text: 'Pull Request Guidelines', link: '/contributing/pull-requests' },
             { text: 'API Rate Limits', link: '/contributing/rate-limits' },
           ],

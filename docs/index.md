@@ -56,4 +56,8 @@ features:
   - icon: 🛠️
     title: Open Source
     details: MIT licensed, fully documented architecture. Fork it, extend it, or contribute back.
+  - icon: 🧭
+    title: Agentic Engineering
+    details: "Rarebox's AI-assisted development workflow is spec-first and verification-led: AGENTS.md, evals, browser smoke tests, CI gates, and a dedicated Rarebox engineering agent keep changes reviewable and controlled."
+    link: /contributing/agentic-engineering
 ---
