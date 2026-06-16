@@ -6,13 +6,19 @@ Rarebox is deployed on **Vercel** with automatic deployments from the `main` bra
 
 ### How It Works
 
-1. Push to `main` on GitHub
+1. Push to `main` on GitHub — by you, or by the daily
+   [data-refresh workflow](/architecture/serverless) committing fresh price
+   and meta-deck JSON into `public/`
 2. Vercel detects the push and starts a build
 3. `npm run build` runs Vite, outputting static files to `dist/`
-4. Python serverless functions in `api/` are bundled with `@vercel/python@4.5.0`
-5. Static files are deployed to Vercel's CDN
-6. Serverless functions are deployed as edge functions
-7. Live at [rarebox.io](https://rarebox.io) within ~60 seconds
+4. Static files are deployed to Vercel's CDN
+5. The one remaining Python function, `api/og.py` (social-embed images for
+   crawlers — the app never calls it), is bundled with `@vercel/python@4.5.0`
+6. Live at [rarebox.io](https://rarebox.io) within ~60 seconds
+
+The app itself is **local-only**: Vercel hands the device code and static
+assets, and the device makes every data call itself. There are no serverless
+data endpoints.
 
 ### `vercel.json` Configuration
 
@@ -22,10 +28,6 @@ Rarebox is deployed on **Vercel** with automatic deployments from the `main` bra
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/health", "destination": "/api/health" },
-    { "source": "/api/search", "destination": "/api/search" },
-    { "source": "/api/price", "destination": "/api/price" },
-    { "source": "/api/sealed", "destination": "/api/sealed" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "functions": {
@@ -38,8 +40,7 @@ Rarebox is deployed on **Vercel** with automatic deployments from the `main` bra
 ```
 
 **Rewrites explained:**
-- API routes (`/api/*`) pass through to serverless functions
-- Everything else falls through to `/index.html` — this is what makes Vue Router's HTML5 history mode work (clean URLs without hash fragments)
+- Everything except `/api/og` falls through to `/index.html` — this is what makes Vue Router's HTML5 history mode work (clean URLs without hash fragments). Static files in `public/` (including the pre-built price/meta-deck JSON) are served before rewrites apply.
 
 ### DNS
 
@@ -55,8 +56,16 @@ Want to run your own instance? Here's what you need.
 1. Fork `novaoc/rarebox` on GitHub
 2. Create a new project on [vercel.com](https://vercel.com)
 3. Import your fork
-4. Vercel auto-detects the Vite framework and Python functions
+4. Vercel auto-detects the Vite framework (and the one `api/og.py` function)
 5. Deploy — no configuration needed
+
+Your fork ships with working price and meta-deck data: the JSON assets in
+`public/` are committed to the repo, just frozen at fork time. To keep them
+refreshing daily, configure the data-refresh workflow — edit its
+`if: github.repository == ...` guard to your fork, set your own `User-Agent`
+in `scripts/build_*_prices.py` (tcgcsv requires an identifying UA), and
+enable the workflow in your fork's Actions tab. Full steps in
+[Static Data Pipeline → Running a Fork Correctly](/architecture/serverless#running-a-fork-correctly).
 
 ### Option 2: Static Hosting + Separate API
 
@@ -67,10 +76,14 @@ npm run build
 # Upload contents of dist/ to any static host
 ```
 
-**But:** You'll need to handle the serverless functions separately. Options:
-- Run them as a standalone Python server (see `price-server/` directory)
-- Port them to your preferred serverless platform (AWS Lambda, Cloudflare Workers, etc.)
-- Skip them entirely — the app works without them, you just lose meta deck data and some price proxying
+Since the app is local-only, static hosting is all it needs — there are no
+serverless data endpoints to port. Two things to know:
+
+- The price/meta-deck JSON in `public/` deploys as plain files; run the
+  `scripts/build_*.py` scripts (cron, CI, or by hand) and redeploy to keep
+  them fresh — see [Static Data Pipeline](/architecture/serverless)
+- The only thing you lose without Vercel is `/api/og` social-embed images;
+  link previews fall back to the static OG tags
 
 ### Option 3: Docker
 
@@ -91,7 +104,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 ```
 
-This only serves the frontend. You'd need a separate container or service for the Python API functions.
+This serves the full app — the data assets are part of the build output. Only `/api/og` social embeds would be missing (see Option 2).
 
 ## Analytics
 

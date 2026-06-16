@@ -1,99 +1,116 @@
-# Serverless Functions
+# Static Data Pipeline
 
-Rarebox is primarily a client-side app, but a few operations need server-side execution. These run as **Vercel Functions** — Python serverless functions in the `api/` directory.
+Rarebox is a **local-only app**: Vercel serves only code and static assets, and
+your device makes every API call itself. There are no serverless data
+endpoints — the `api/` directory contains exactly one function, `/api/og`,
+which renders social-embed images for link-preview crawlers (Discord,
+Telegram, X). The app never calls it.
 
-## Why Server-Side?
+Some data sources can't be reached from a browser, though:
 
-Three reasons a request needs to go through the server:
+1. **tcgcsv.com** (daily TCGplayer price dumps) — no CORS, and its terms of
+   use allow backend scripts only
+2. **Meta-deck sites** (Limitless TCG and others) — HTML scraping, no public
+   API
 
-1. **CORS restrictions** — some APIs don't allow browser-origin requests
-2. **HTML scraping** — Limitless TCG doesn't have a public API; we scrape their site
-3. **Response transformation** — some data needs processing before the client can use it (e.g., resolving card set codes to pokemontcg.io IDs)
+Instead of proxying these through serverless functions, a daily GitHub
+Actions workflow pre-builds them into static JSON in `public/`, which deploys
+with the app like any other asset.
 
-Everything else is fetched directly from the browser.
+## The Assets
 
-## Endpoints
+| Asset | Built by | Contents |
+|-------|----------|----------|
+| `public/riftbound-prices.json` | `scripts/build_riftbound_prices.py` | TCGplayer market prices for all Riftbound cards (tcgcsv category 89), keyed by TCGplayer product id, `{ normal, foil }` per product |
+| `public/jp-prices.json` | `scripts/build_jp_prices.py` | TCGplayer prices for 16k+ Japanese Pokémon cards (tcgcsv category 85 "Pokemon Japan"), keyed `{tcgdex set id}-{number}` (lowercase, no leading zeros) |
+| `public/meta-decks/{game}.json` | `scripts/build_meta_decks.py` | Scraped tournament meta decks per game, cards resolved to ids/images/prices |
 
-### `GET /api/health`
+## The Workflow
 
-Simple health check. Returns 200 with a status message. Used for uptime monitoring.
+`.github/workflows/refresh-data.yml` in the app repo:
 
-### `GET /api/search`
+- Runs daily at **21:00 UTC** — an hour after tcgcsv's ~20:00 refresh — with a
+  **23:00 retry** for days tcgcsv runs late. Also triggerable manually via
+  `workflow_dispatch`.
+- The price scripts compare tcgcsv's `last-updated.txt` stamp against the one
+  embedded in the committed JSON and **skip the sync when nothing changed**,
+  so the retry (and any manual run) is a cheap no-op.
+- Both price scripts **refuse to overwrite** their output if the pull comes
+  back suspiciously small — a bad upstream day degrades to stale prices,
+  never broken prices. The meta-deck script likewise keeps yesterday's file
+  for any game whose scraper fails.
+- Changed files are committed as `github-actions[bot]`; the push to `main`
+  triggers the normal Vercel static deploy. No change → no commit → no
+  deploy.
+- Robustness rails: a `concurrency` group (runs can't overlap), 15-minute
+  job timeout, `git pull --rebase` before push (a concurrent push to `main`
+  doesn't lose the refresh), and a fork guard (below).
 
-Scrapes Limitless TCG for current meta deck data. This is the most complex endpoint:
+## Running a Fork Correctly
 
-1. Fetches the meta standings page from Limitless
-2. Parses HTML with BeautifulSoup to extract top decks, meta share, and CP
-3. Resolves core card names to exact pokemontcg.io card IDs (set code + card number)
-4. Returns structured JSON with deck names, card lists, and metadata
+The workflow job is gated:
 
-**Performance:** Can take 5-15 seconds depending on Limitless response time and the number of card resolutions needed. Max duration is 30 seconds (configured in `vercel.json`).
-
-### `GET /api/price`
-
-Price proxy/lookup endpoint. Fetches and transforms price data that can't be accessed directly from the browser.
-
-### `GET /api/sealed`
-
-Fetches sealed product pricing from PriceCharting for items that need server-side access.
-
-## Client-Side Meta Decks
-
-In addition to the serverless endpoint, `metaDecksApi.js` provides:
-
-- **Live fetch** from `/api/search` with localStorage fallback (24h cache)
-- **Static fallback decks** when the live endpoint is unavailable
-- **Game-specific caching** — each TCG has its own cache key
-- **Cache invalidation** — stale fallback data is removed when server data is available
-
-## Runtime Configuration
-
-From `vercel.json`:
-
-```json
-{
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "@vercel/python@4.5.0",
-      "maxDuration": 30
-    }
-  }
-}
+```yaml
+if: github.repository == 'novaoc/rarebox'
 ```
 
-- **Runtime:** Python via `@vercel/python@4.5.0`
-- **Max duration:** 30 seconds per invocation
-- **Dependencies:** `httpx` (async HTTP) and `beautifulsoup4` (HTML parsing), specified in `requirements.txt`
+Forks inherit the workflow file, but their copy no-ops — otherwise every
+enabled fork would hit tcgcsv and the deck sites with traffic identified as
+Rarebox. **A fork still works without it**: the committed JSON ships with the
+clone, just frozen at fork time.
 
-## Developing Locally
+To make your fork self-refresh:
 
-Vercel Functions can be tested locally using the Vercel CLI:
+1. **Edit the guard** in `.github/workflows/refresh-data.yml` to your
+   `owner/repo`.
+2. **Change the `User-Agent`** in `scripts/build_riftbound_prices.py` and
+   `scripts/build_jp_prices.py` to identify *your* deployment. tcgcsv
+   requires an identifying UA — generic browser UAs get a 401 — and its
+   other rules (re-sync only on stamp change, ≤10k requests/day) are already
+   handled by the scripts.
+3. **Enable the workflow** in your fork's Actions tab. GitHub disables
+   Actions in forks until you opt in, and inherited scheduled workflows stay
+   disabled even after that — both are deliberate, so nothing runs by
+   surprise.
+
+Note that GitHub also auto-disables scheduled workflows in public repos
+after 60 days without repository activity; the daily data commits normally
+keep the timer reset on an active deployment.
+
+## Client Consumption
+
+The app fetches the assets same-origin (works in plain `vite dev` too —
+Vite serves `public/` at the root):
+
+- **`providers.js`** (Riftbound browse) joins `/riftbound-prices.json` on
+  each card's `tcgplayer_id` — exact per-printing matches, so a Signature
+  can never inherit its plain card's price. If the asset yields zero prices
+  for a set (e.g. a set newer than the last refresh), it falls back to the
+  old PriceCharting search.
+- **`pokemonApi.js`** reads `/jp-prices.json` for Japanese card grids,
+  detail views, and portfolio refresh, falling back to tcgdex's Cardmarket
+  EUR data where TCGplayer has nothing.
+- **`metaDecksApi.js`** fetches `/meta-decks/{game}.json` with a 24h
+  localStorage cache and built-in fallback decks when the asset is missing
+  or empty for a game.
+
+## Running the Scripts Locally
 
 ```bash
-npm i -g vercel
-vercel dev
+pip install httpx beautifulsoup4   # meta decks only; price scripts are stdlib
+python3 scripts/build_riftbound_prices.py
+python3 scripts/build_jp_prices.py
+python3 scripts/build_meta_decks.py [game ...]
 ```
 
-This starts a local dev server that emulates the serverless function runtime. API endpoints are available at `http://localhost:3000/api/*`.
+Each writes into `public/` and prints what it did. The price scripts exit
+early with "up to date" unless tcgcsv has refreshed since the committed
+stamp.
 
-## Caching Recommendations
+## History
 
-Currently, API responses aren't cached server-side. For production traffic, consider:
-
-- **Quick win:** Add `Cache-Control: s-maxage=3600` headers to responses. Vercel's CDN caches them automatically for the specified duration.
-- **Meta decks:** Could use `s-maxage=86400` (24h) since tournament data changes daily at most.
-- **Price lookups:** `s-maxage=3600` (1h) is a reasonable default.
-
-```python
-# Example: adding cache headers to a response
-from http.server import BaseHTTPRequestHandler
-
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # ... fetch and process data ...
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Cache-Control', 's-maxage=3600')
-        self.end_headers()
-        self.wfile.write(json.dumps(result).encode())
-```
+Until mid-2026 Rarebox ran Python serverless functions on Vercel
+(`/api/search`, `/api/price`, `/api/sealed`, `/api/health`, `/api/meta-decks`)
+for scraping and price proxying. They were removed in favor of this pipeline
+— the local-only rule means the only thing a server should do is hand the
+device files.

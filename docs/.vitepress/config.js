@@ -61,7 +61,7 @@ export default defineConfig({
             { text: 'Project Structure', link: '/architecture/project-structure' },
             { text: 'Data Flow & Persistence', link: '/architecture/data-flow' },
             { text: 'API Integrations', link: '/architecture/api-integrations' },
-            { text: 'Serverless Functions', link: '/architecture/serverless' },
+            { text: 'Static Data Pipeline', link: '/architecture/serverless' },
             { text: 'Price Snapshot System', link: '/architecture/snapshots' },
             { text: 'Component Guide', link: '/architecture/components' },
           ],

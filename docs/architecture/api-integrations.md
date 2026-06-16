@@ -114,18 +114,41 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 - Open REST API, no API key required
 - 7 sets (Origins, Spiritforged, Unleashed, promo sets), 1000+ cards
 - Card images from Riot Games CDN (`cmsassets.rgpub.io`)
-- Pagination: 50 cards per page
-- **No prices** — card data only. Prices come from PriceCharting, merged variant-aware (see note below)
-- `tcgplayer_id` field available for price lookups if needed
+- Pagination: 100 cards per page
+- **No prices** — card data only. Each card carries a `tcgplayer_id`, which is
+  what makes exact price joins possible (see note below)
 - Results cached in memory for 1 hour
 
-::: note Price Source — variant-aware
-riftcodex provides card metadata and images; prices come from PriceCharting. Because PriceCharting caps each search at 100 products, the browse provider runs **three queries per set** (base, `signature`, `alternate art`), de-duplicates, and filters by console name. Variant printings (`(Signature)`, `(Alternate Art)`) only ever take their own bracketed PriceCharting listing — **a variant never falls back to the plain card's price** (no price beats a wrong one). `(Overnumbered)` is the plain printing of an over-set-size champion. Search, trade analyzer, portfolio refresh, and the offline cache all hydrate from this same per-set price map.
+::: note Price Source — exact join, variant-aware
+riftcodex provides card metadata and images; prices are TCGplayer market
+prices from the pre-built `/riftbound-prices.json` static asset (see
+[Static Data Pipeline](/architecture/serverless)), joined on each card's
+`tcgplayer_id`. Every printing is its own TCGplayer product, so matches are
+exact — **a variant (`(Signature)`, `(Alternate Art)`) never falls back to
+the plain card's price** (no price beats a wrong one), and promo sets
+(PR/OPP/JDG) are fully covered. `(Overnumbered)` is the plain printing of an
+over-set-size champion. If the asset yields no prices for a set (e.g. newer
+than the last daily refresh), the provider falls back to the old
+PriceCharting search (three queries per set around its 100-result cap,
+filtered by console name, variant-aware). Search, trade analyzer, portfolio
+refresh, and the offline cache all hydrate from this same per-set price map.
 :::
+
+## tcgcsv.com
+
+**Purpose:** Daily TCGplayer price dumps — Riftbound singles (category 89) and Japanese Pokémon cards (category 85 "Pokemon Japan").
+
+**Called from:** CI only (`scripts/build_riftbound_prices.py`, `scripts/build_jp_prices.py` via the daily `refresh-data.yml` workflow) — **never the browser**. tcgcsv has no CORS and its terms allow backend scripts only. The app consumes the results as static assets (`/riftbound-prices.json`, `/jp-prices.json`).
+
+**Key details:**
+- Requires an identifying `User-Agent` (`Rarebox/1.4 (+https://rarebox.io)`) — generic browser UAs get a 401. Forks must use their own (see [Static Data Pipeline](/architecture/serverless))
+- Updates once daily around 20:00 UTC; `last-updated.txt` is the change stamp, and the scripts re-sync only when it moves
+- Japanese Pokémon join: tcgcsv group abbreviations match tcgdex set ids, product `Number` ("205/187") matches tcgdex `localId`
+- ≤10k requests/day allowed; a full sync of both categories uses a few hundred
 
 ## PriceCharting
 
-**Purpose:** Sealed product prices (booster boxes, ETBs, tins), graded slab prices (grade-specific), and market prices for non-Pokémon TCG cards (Magic, Yu-Gi-Oh!, Lorcana, One Piece, Riftbound).
+**Purpose:** Sealed product prices (booster boxes, ETBs, tins), graded slab prices (grade-specific), and market prices for non-Pokémon TCG cards (Magic, Yu-Gi-Oh!, Lorcana, One Piece; for Riftbound singles it's now only the fallback when the static price asset has nothing).
 
 **Called from:** Browser (client-side, direct JSON API calls)
 
@@ -153,17 +176,23 @@ riftcodex provides card metadata and images; prices come from PriceCharting. Bec
 
 **Purpose:** Current tournament meta deck data — top decks, meta share percentages, championship points.
 
-**Called from:** Vercel serverless function (`/api/search`) and client-side (`metaDecksApi.js`)
+**Called from:** CI only (`scripts/build_meta_decks.py` via the daily `refresh-data.yml` workflow); the client (`metaDecksApi.js`) reads the result from the `/meta-decks/{game}.json` static asset
 
 **Key details:**
 - Data is **scraped** from Limitless TCG's website using httpx + BeautifulSoup (no official API)
-- Core cards are resolved server-side with exact card match (set code + number)
-- Client-side service fetches from serverless endpoint with localStorage fallback (24h cache)
-- Static fallback decks available when live endpoint is unavailable
+- Core cards are resolved in the build script with exact card match (set code + number)
+- Client-side service fetches the static asset with localStorage fallback (24h cache)
+- Static fallback decks available when the asset is missing or empty for a game
 - If Limitless changes their HTML structure, the scraper will break and need updating
 
 ::: warning Scraping Dependency
-The Limitless TCG integration is the most fragile part of the system. It relies on HTML structure that can change without notice. If meta decks stop loading, the scraper likely needs updating. Check `/api/search.py` first.
+The meta-deck scrapers are the most fragile part of the system — they rely on
+HTML structure that can change without notice. If meta decks stop loading,
+check `scripts/build_meta_decks.py` first. As of mid-2026 only the Pokémon
+(Limitless) scraper yields decks: the MTG/One Piece/Yu-Gi-Oh selectors are
+stale and the Lorcana/Riftbound sources 403; those games run on the client's
+fallback decks. The daily workflow keeps the previous day's file whenever a
+scraper fails, so a broken scraper degrades to stale decks, never none.
 :::
 
 ## Pokellector
