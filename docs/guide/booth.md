@@ -61,6 +61,16 @@ binders:
 Matching is exact on card/product identity when both sides picked from the
 database, with a word-matching fallback for hand-typed listings.
 
+### Demand flags — know what other vendors want (v1.5)
+
+Booth shares now carry the owner's wantlist inside the share itself. Scan
+another vendor's booth and save it, and **your own table mode flags any of
+your listings that vendor is hunting** — a "🎯 ISO — *shop name*" chip right
+on the row. Walk the hall once, come back knowing exactly which of your
+cards the table across the aisle wants to trade for. (Shares are still
+fully self-contained and serverless; re-sharing a scanned booth keeps its
+original wantlist, never yours.)
+
 ## Table mode — run the booth live
 
 Five deals back-to-back and the list is already out of date — that's the

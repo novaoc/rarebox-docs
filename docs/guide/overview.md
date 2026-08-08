@@ -4,7 +4,7 @@ Rarebox is a privacy-first multi-TCG collection tracker that runs entirely in yo
 
 **Live at [rarebox.io](https://rarebox.io)** · **Source on [GitHub](https://github.com/novaoc/rarebox)**
 
-Since v1.4.0 the app wears **[Tactile](/design/tactile)** — a custom design system with a bottom tab bar on phones/foldables/tablets and a top bar on desktop. Five alternative design prototypes remain live at [rarebox.io/designs](https://rarebox.io/designs).
+Since v1.4.0 the app wears **[Tactile](/design/tactile)** — a custom design system with a bottom tab bar on phones/foldables/tablets and a top bar on desktop. **v1.5.0 redesigned the whole information architecture around it**: the tabs are now Home · Shelf · **Add** · Sets · Trade, with the raised pink disc opening a three-button fan — Scan card (camera → on-device identification → prefilled add), Search, and Sealed. Home reads in the collector's daily order — value → change → progress → wants — with movers, binder-completion rows ("≈ $X to finish", one-tap "Want the rest"), and your top hunts. Card details open as a grab-handle bottom sheet with a quantity stepper and physical grade key-caps. Five alternative design prototypes remain live at [rarebox.io/designs](https://rarebox.io/designs).
 
 ## Why Rarebox?
 
@@ -25,12 +25,14 @@ Six trading card games are supported out of the box:
 
 | TCG | Card Source | Price Source | Notes |
 |-----|------------|--------------|-------|
-| Pokémon | pokemontcg.io | TCGPlayer market | English + Japanese cards |
+| Pokémon | pokemontcg.io + TCGplayer supplements | TCGPlayer market | English + Japanese, incl. promo sets pokemontcg.io lacks and JP secret rares |
 | Magic: The Gathering | Scryfall | Scryfall USD prices | Paper cards only |
-| Yu-Gi-Oh! | YGOPRODeck | TCGPlayer + Cardmarket | All rarities |
+| Yu-Gi-Oh! | YGOPRODeck | TCGPlayer | All rarities |
 | Disney Lorcana | Lorcast | Lorcast USD prices | All sets |
-| One Piece | optcgapi | Market prices | All sets |
-| Riftbound | riftcodex | PriceCharting | Images from Riot CDN |
+| One Piece | optcgapi | TCGPlayer (EN) · PriceCharting (JP) | English + Japanese sets |
+| Riftbound | riftcodex | TCGPlayer | Images from Riot CDN |
+
+Card search runs one query brain everywhere: set codes, collector numbers, rarities, nicknames, and typo rescue — with Japanese printings appearing on every Pokémon query. When a primary catalog API goes down, the app transparently falls back to the **[open dataset](/data/rarebox-data)** it publishes daily, so Browse keeps working through upstream outages.
 
 ### Deck Builder
 Create decks for any TCG, cross-reference against your collection to see which cards you already own, calculate cost to complete, and import current meta decks from Limitless TCG with one click. Meta decks are available for all 6 TCGs.

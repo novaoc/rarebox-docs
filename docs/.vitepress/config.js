@@ -23,6 +23,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/overview' },
       { text: 'Design', link: '/design/tactile' },
+      { text: 'Data', link: '/data/rarebox-data' },
       { text: 'Architecture', link: '/architecture/project-structure' },
       { text: 'Contributing', link: '/contributing/setup' },
       { text: 'Rarebox', link: 'https://rarebox.io' },
@@ -51,6 +52,14 @@ export default defineConfig({
           text: 'Design',
           items: [
             { text: 'Tactile — Design System & Branding', link: '/design/tactile' },
+          ],
+        },
+      ],
+      '/data/': [
+        {
+          text: 'Data',
+          items: [
+            { text: 'Rarebox Data — the open dataset', link: '/data/rarebox-data' },
           ],
         },
       ],

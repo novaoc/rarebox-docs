@@ -2,6 +2,15 @@
 
 Rarebox pulls data from several external APIs. Each has different characteristics, rate limits, and caching strategies. This page documents what data comes from where and how to work with each API during development.
 
+## rarebox-data (supplements + outage fallback)
+
+**Purpose:** The [open dataset](/data/rarebox-data) Rarebox publishes daily is also an input to the app itself, in two roles:
+
+1. **Catalog supplements** shipped as static assets: `en-extras.json` (TCGplayer-only English cards no primary catalog has — the `x-` sets, e.g. ME Black Star Promos), the JP index that adds English names, product images, and the secret rares tcgdex omits, and per-game static price maps (`en-prices.json`, `jp-prices.json`, `op-jp-prices.json`, `ygo-prices.json`, `riftbound-prices.json`) built in daily CI.
+2. **Outage fallback** (`services/datasetFallback.js`): when pokemontcg.io or tcgdex fail, `getSets` / `getCardsBySet` / `getCard` / `getJapaneseCardsBySet` transparently serve from `raw.githubusercontent.com/novaoc/rarebox-data` — same shapes, at most a day behind.
+
+**Key details:** dependency-free module, 15s timeouts, dataset cards are marked `_dataset: true`. Prices still come from the static maps (the dataset fallback never invents prices).
+
 ## pokemontcg.io
 
 **Purpose:** Card data (names, images, sets, types) and live TCGPlayer market prices for Pokémon.
@@ -100,6 +109,7 @@ Rarebox pulls data from several external APIs. Each has different characteristic
 - Set ordering hardcoded to match release order
 - API response can return `{ data: [...] }` or bare array — handler checks both
 - Results cached in memory for 1 hour
+- English prices come from TCGplayer (`op-prices.json`, daily CI); Japanese sets use a pre-built static index plus PriceCharting prices (`op-jp-prices.json`, ~3,200 base+parallel keys refreshed on a rotating daily shard — TCGplayer has no Japanese One Piece category)
 
 ## riftcodex.com
 

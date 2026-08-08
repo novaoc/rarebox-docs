@@ -46,6 +46,10 @@ The dashboard view shows:
 
 Click any item in the shelf table to edit quantity, cost basis, or to remove it. Changes persist immediately via debounced writes to IndexedDB.
 
+Since v1.5, the item detail opens as a **grab-handle bottom sheet** on phones (tap or swipe the handle down to dismiss) with the card art in a framed, slightly tilted mat. Quantity is a mechanical stepper and a graded slab's company + grade are physical key-caps — every press persists instantly, no Save button.
+
+**Shelves self-heal.** Price refresh fetches the full card, so items that were saved without a picture or set name (old imports, bulk paste) get their missing images and metadata backfilled automatically on the next refresh — stored values are never overwritten.
+
 ## Grouping & Sorting
 
 The shelf view supports grouping items by:

@@ -4,7 +4,7 @@ Rarebox provides two types of price visualization: individual card price history
 
 ## Card Price History
 
-When you view a card's detail panel, you can see its price history chart going back to **November 2022**, sourced from the tcgdex price history API.
+When you view a card's detail panel, you can see its price history chart. Since v1.5, history for **every game** is backed by [rarebox-price-history](https://github.com/novaoc/rarebox-price-history) — daily TCGplayer market data going back to **February 2024** across Pokémon (EN + JP), Magic, Yu-Gi-Oh!, Lorcana, One Piece, and Riftbound — with tcgdex history (November 2022 onwards) still supplementing Pokémon. See [Rarebox Data](/data/rarebox-data) for consuming the same series in your own app.
 
 ### Chart Ranges
 
